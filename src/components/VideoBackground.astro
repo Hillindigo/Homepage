@@ -1,0 +1,19 @@
+---
+const { src, class: className = '' } = Astro.props;
+---
+<video class={`video-bg ${className}`} data-fading-video src={src} autoplay muted playsinline preload="auto"></video>
+<script>
+  const setup = (video: HTMLVideoElement) => {
+    let raf = 0; let fading = false; let timer = 0;
+    const fadeTo = (target: number, duration = 500) => {
+      cancelAnimationFrame(raf); const from = Number(video.style.opacity || 0); const start = performance.now();
+      const tick = (now: number) => { const p = Math.min((now-start)/duration,1); video.style.opacity = String(from + (target-from)*(1-Math.pow(1-p,3))); if(p<1) raf=requestAnimationFrame(tick); };
+      raf=requestAnimationFrame(tick);
+    };
+    video.addEventListener('loadeddata',()=>{video.style.opacity='0';video.play().catch(()=>{});fadeTo(1)});
+    video.addEventListener('timeupdate',()=>{const left=video.duration-video.currentTime;if(!fading&&left<=.55&&left>0){fading=true;fadeTo(0)}});
+    video.addEventListener('ended',()=>{video.style.opacity='0';timer=window.setTimeout(()=>{video.currentTime=0;video.play().catch(()=>{});fading=false;fadeTo(1)},100)});
+    return()=>{cancelAnimationFrame(raf);clearTimeout(timer)};
+  };
+  document.querySelectorAll<HTMLVideoElement>('[data-fading-video]').forEach(setup);
+</script>
