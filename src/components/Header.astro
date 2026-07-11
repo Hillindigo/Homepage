@@ -7,5 +7,5 @@ const nav = lang === 'zh' ? [['文章','writing'],['笔记','notes'],['项目','
 <header class="site-header"><nav class="nav glass">
   <a class="identity" href={`${base}/${lang}/`}><img src={`${base}/images/avatar.png`} alt="Hillindigo avatar"/><span>青山黛 · Hillindigo</span></a>
   <div class="nav-links">{nav.map(([label,path])=><a href={`${base}/${lang}/${path}/`}>{label}</a>)}</div>
-  <div class="nav-tools"><a href={`${base}/${other}/`} aria-label="Switch language">{other.toUpperCase()}</a><button data-theme-toggle aria-label="切换深浅主题">◐</button></div>
+  <div class="nav-tools"><a href={`${base}/${lang}/search/`} aria-label={lang==='zh'?'搜索':'Search'}>⌕</a><a href={`${base}/${other}/`} aria-label="Switch language">{other.toUpperCase()}</a><button data-theme-toggle aria-label="切换深浅主题">◐</button></div>
 </nav></header>

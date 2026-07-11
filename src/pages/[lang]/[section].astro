@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-export function getStaticPaths(){const sections=['writing','notes','projects','life','about'];return ['zh','en'].flatMap(lang=>sections.map(section=>({params:{lang,section}})))}
+export function getStaticPaths(){const sections=['notes','projects','life','about'];return ['zh','en'].flatMap(lang=>sections.map(section=>({params:{lang,section}})))}
 const {lang='zh',section='writing'}=Astro.params;const zh=lang==='zh';
 const names={writing:['文章','Writing'],notes:['笔记','Notes'],projects:['项目','Projects'],life:['生活','Life'],about:['关于','About']};
 const title=names[section as keyof typeof names][zh?0:1];

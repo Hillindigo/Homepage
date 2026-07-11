@@ -1,0 +1,6 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';import Search from '../../components/Search.astro';
+export function getStaticPaths(){return [{params:{lang:'zh'}},{params:{lang:'en'}}]}
+const {lang='zh'}=Astro.params;
+---
+<BaseLayout lang={lang} title={`${lang==='zh'?'搜索':'Search'} · Hillindigo`}><main class="content-page"><div class="shell"><p class="eyebrow">HILLINDIGO / SEARCH</p><h1>{lang==='zh'?'搜索':'Search'}</h1><Search lang={lang}/></div></main></BaseLayout>

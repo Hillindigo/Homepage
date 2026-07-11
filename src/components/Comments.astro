@@ -1,0 +1,18 @@
+---
+const { lang='zh', term='pathname' } = Astro.props;
+const repoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
+const categoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
+const enabled = Boolean(repoId && categoryId);
+---
+<section class="comments" aria-labelledby="comments-title">
+  <p class="eyebrow">{lang==='zh'?'讨论':'DISCUSSION'}</p>
+  <h2 id="comments-title">{lang==='zh'?'评论与补充':'Comments & additions'}</h2>
+  {enabled ? <div class="giscus"></div> : <p class="comments-pending">{lang==='zh'?'评论区将在 GitHub Discussions 配置完成后启用。':'Comments will open after GitHub Discussions is configured.'}</p>}
+</section>
+{enabled && <script is:inline define:vars={{repoId,categoryId,term,lang}}>
+  const script=document.createElement('script');
+  Object.assign(script,{src:'https://giscus.app/client.js',async:true,crossOrigin:'anonymous'});
+  const attrs={repo:'Hillindigo/Homepage','repo-id':repoId,category:'Announcements','category-id':categoryId,mapping:term,strict:'0','reactions-enabled':'1','emit-metadata':'0','input-position':'top',theme:document.documentElement.dataset.theme==='light'?'light':'dark',lang:lang==='zh'?'zh-CN':'en',loading:'lazy'};
+  Object.entries(attrs).forEach(([key,value])=>script.setAttribute(`data-${key}`,String(value)));
+  document.querySelector('.giscus')?.appendChild(script);
+</script>}

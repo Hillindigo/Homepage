@@ -1,0 +1,20 @@
+---
+const { lang='zh' } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<div class="search-panel glass" data-search-root data-base={base} data-lang={lang}>
+  <div id="search"></div>
+  <p class="search-hint">{lang === 'zh' ? '搜索文章、笔记与项目。搜索索引在构建后生成。' : 'Search writing, notes and projects. The index is generated after build.'}</p>
+</div>
+<link rel="stylesheet" href={`${base}/pagefind/pagefind-ui.css`}/>
+<script>
+  const root = document.querySelector<HTMLElement>('[data-search-root]');
+  if (root) {
+    const base = root.dataset.base || '';
+    const lang = root.dataset.lang || 'zh';
+    import(`${base}/pagefind/pagefind-ui.js`).then(() => {
+      const PagefindUI = (window as any).PagefindUI;
+      if(PagefindUI) new PagefindUI({ element:'#search', showSubResults:true, bundlePath:`${base}/pagefind/`, translations: lang==='zh' ? {placeholder:'搜索',clear_search:'清除',load_more:'加载更多',search_label:'站内搜索',filters_label:'筛选',zero_results:'未找到 [SEARCH_TERM] 相关内容',many_results:'找到 [COUNT] 条结果',one_result:'找到 1 条结果'} : undefined });
+    }).catch(() => { root.classList.add('search-unavailable'); });
+  }
+</script>

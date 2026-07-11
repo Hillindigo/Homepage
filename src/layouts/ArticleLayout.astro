@@ -1,0 +1,16 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Comments from '../components/Comments.astro';
+const { entry, readingMinutes, headings=[] } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, lang } = entry.data;
+const date = new Intl.DateTimeFormat(lang==='zh'?'zh-CN':'en-US',{dateStyle:'long'});
+---
+<BaseLayout lang={lang} title={`${title} · Hillindigo`} description={description}>
+  <main class="article-shell shell" data-pagefind-body>
+    <article class="article">
+      <header class="article-header"><p class="eyebrow">HILLINDIGO / WRITING</p><h1>{title}</h1><p class="article-description">{description}</p><div class="article-meta"><time datetime={pubDate.toISOString()}>{date.format(pubDate)}</time><span>{readingMinutes} {lang==='zh'?'分钟阅读':'min read'}</span>{updatedDate&&<span>{lang==='zh'?'更新于':'Updated'} {date.format(updatedDate)}</span>}</div><div class="article-tags">{tags.map((tag:string)=><span>{tag}</span>)}</div></header>
+      <div class="article-layout"><aside class="toc"><p class="eyebrow">{lang==='zh'?'目录':'CONTENTS'}</p><nav>{headings.filter((h:any)=>h.depth<=3).map((h:any)=><a class={`depth-${h.depth}`} href={`#${h.slug}`}>{h.text}</a>)}</nav></aside><div class="prose"><slot/></div></div>
+      <Comments lang={lang}/>
+    </article>
+  </main>
+</BaseLayout>
