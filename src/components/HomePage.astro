@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import VideoBackground from './VideoBackground.astro';
+const { lang='zh' } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const zh = lang === 'zh';
+type Card = [string, string, string[]];
+type HomeContent = { badge:string; title:string; copy:string; primary:string; secondary:string; kicker:string; heading:string; note:string; cards:Card[] };
+const content: HomeContent = zh ? {
+  badge:'正在探索 AI Agent、系统与有温度的生活', title:'越过已知 构建尚未发生之物', copy:'我是 Hillindigo。这里记录 AI Agent、软件工程与知识系统的探索，也收藏工具、阅读和生活中缓慢但重要的片段。', primary:'进入我的宇宙', secondary:'最近文章', kicker:'这座宇宙中的轨道', heading:'思想 正在运行', note:'完整文章、粗糙笔记、真实项目，以及技术之外的生活切片。',
+  cards:[['文章与研究','将复杂技术拆解为能够理解、验证和长期使用的知识。',['AI Agent','工业 AI','工程']],['产品与实验','从真实问题出发，用代码快速验证想法并记录技术选择。',['前端','后端','原型']],['生活与笔记','保存阅读、工具、摄影与日常观察，让数字花园保持真实。',['Notes','Reading','Life']]]
+} : {
+  badge:'Exploring agents, systems and a life well made', title:'Venture Past the Known Build What Comes Next', copy:'I am Hillindigo. This is a digital universe for AI agents, software systems and knowledge tools, with room for the quiet observations beyond technology.', primary:'Explore my universe', secondary:'Latest writing', kicker:'Orbits inside this universe', heading:'Ideas in Orbit', note:'Long-form writing, rough notes, honest projects, and fragments of life beyond technology.',
+  cards:[['Research & Writing','Turning complex technology into knowledge that can be understood, tested and maintained.',['AI Agents','Industrial AI','Engineering']],['Products & Experiments','Starting from real problems, validating ideas with code and documenting the decisions.',['Frontend','Backend','Prototypes']],['Life & Notes','Reading, tools, photography and everyday observations that keep this garden human.',['Notes','Reading','Life']]]
+};
+const routes=['writing','projects','life'];
+---
+<BaseLayout lang={lang} title={`${zh?'青山黛':'Hillindigo'} · Hillindigo`}>
+  <main><section class="page-hero"><VideoBackground src={`${base}/media/hero.mp4`}/><div class="grain"></div><div class="hero-content"><div class="status glass"><b>NOW</b>{content.badge}</div><h1 class="hero-title">{content.title}</h1><p class="hero-copy">{content.copy}</p><div class="hero-actions"><a class="button primary" href="#orbits">{content.primary} ↗</a><a class="button glass" href={`${base}/${lang}/writing/`}>{content.secondary}</a></div></div><div class="hero-foot"><span>HILLINDIGO · UTC+8</span><span>SCROLL TO EXPLORE ↓</span><span>A DIGITAL GARDEN IN MOTION</span></div></section>
+  <section class="orbit-section" id="orbits"><VideoBackground src={`${base}/media/orbit.mp4`}/><div class="grain"></div><div class="orbit-inner shell"><div class="orbit-head"><div><p class="eyebrow">02 / {content.kicker}</p><h2>{content.heading}</h2></div><p>{content.note}</p></div><div class="orbit-grid">{content.cards.map((card,i)=><article class="orbit-card glass"><span class="index">0{i+1}</span><div class="tags">{card[2].map(tag=><span>{tag}</span>)}</div><div><h3>{card[0]}</h3><p>{card[1]}</p><a href={`${base}/${lang}/${routes[i]}/`}>{zh?'进入轨道':'Enter orbit'} ↗</a></div></article>)}</div></div></section></main>
+</BaseLayout>
