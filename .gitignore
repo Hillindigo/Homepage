@@ -4,3 +4,7 @@ dist/
 .DS_Store
 .astro-dev.*
 .astro-preview.*
+.env
+.env.local
+.env.*.local
+!.env.example
