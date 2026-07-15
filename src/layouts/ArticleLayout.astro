@@ -41,7 +41,7 @@ const alternatePath=translation?`${base}/${otherLang}/${route}/${translationSlug
     const links=[...document.querySelectorAll<HTMLAnchorElement>('.toc a')];
     const headings=[...document.querySelectorAll<HTMLElement>('.prose h2[id],.prose h3[id]')];
     const setActive=(id:string)=>links.forEach(link=>link.toggleAttribute('aria-current',link.hash===`#${id}`));
-    const observer=new IntersectionObserver(entries=>{const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];if(visible)setActive((visible.target as HTMLElement).id);},{rootMargin:'-18% 0px -68% 0px',threshold:[0,1]});
-    headings.forEach(heading=>observer.observe(heading));
+    const updateActive=()=>{if(!headings.length)return;const current=[...headings].reverse().find(heading=>heading.getBoundingClientRect().top<=170)??headings[0];setActive(current.id);};
+    window.addEventListener('scroll',updateActive,{passive:true});updateActive();
   </script>
 </BaseLayout>
