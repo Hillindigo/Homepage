@@ -1,8 +1,0 @@
----
-import BaseLayout from '../../layouts/BaseLayout.astro';
-export function getStaticPaths(){const sections=['notes','projects','life','about'];return ['zh','en'].flatMap(lang=>sections.map(section=>({params:{lang,section}})))}
-const {lang='zh',section='writing'}=Astro.params;const zh=lang==='zh';
-const names={writing:['文章','Writing'],notes:['笔记','Notes'],projects:['项目','Projects'],life:['生活','Life'],about:['关于','About']};
-const title=names[section as keyof typeof names][zh?0:1];
----
-<BaseLayout lang={lang} title={`${title} · Hillindigo`}><main class="content-page"><div class="shell"><p class="eyebrow">HILLINDIGO / {section.toUpperCase()}</p><h1>{title}</h1><div class="empty-state"><p>{zh?'这里是正式内容结构的 v0。下一阶段将接入 Markdown/MDX 内容、筛选、搜索与文章详情布局。':'This is the v0 content structure. Markdown/MDX collections, filtering, search and full article layouts come next.'}</p></div></div></main></BaseLayout>

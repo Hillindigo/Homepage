@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+export function getStaticPaths(){return [{params:{lang:'zh'}},{params:{lang:'en'}}]}
+const {lang='zh'}=Astro.params; const zh=lang==='zh'; const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+---
+<BaseLayout lang={lang} title={`${zh?'关于':'About'} · Hillindigo`} description={zh?'关于 Hillindigo 与青山黛。':'About Hillindigo and this digital garden.'}>
+  <main class="about-page shell" data-pagefind-body>
+    <section class="about-hero"><div><p class="eyebrow">05 / ABOUT</p><h1>{zh?'你好，我是 Hillindigo。':'Hello, I’m Hillindigo.'}</h1><p class="about-lead">{zh?'我关注 AI Agent、软件工程、知识管理与工业 AI，也相信一个人的网站应该同时容纳严谨的技术和真实的生活。':'I work across AI agents, software engineering, knowledge systems and industrial AI—and believe a personal website should make room for both rigorous technology and a real life.'}</p></div><button class="portrait-frame" data-lightbox={`${base}/images/avatar.png`} aria-label={zh?'查看头像大图':'View portrait'}><img src={`${base}/images/avatar.png`} alt="Hillindigo portrait"/><span>HILLINDIGO / 2026</span></button></section>
+    <section class="about-manifesto"><p class="eyebrow">WHAT I CARE ABOUT</p><div class="manifesto-grid"><h2>{zh?'把复杂的事说清楚，把有价值的东西留下来。':'Make complex things clear. Keep what remains valuable.'}</h2><div><p>{zh?'这里是我的长期数字花园，而不是信息流。文章用于建立完整论述，笔记保存正在形成的想法，项目记录真实决策，生活栏目则提醒我：技术只是理解世界的一种方式。':'This is a long-term digital garden, not a feed. Essays build complete arguments, notes preserve ideas in motion, projects document real decisions, and Life is a reminder that technology is only one way to understand the world.'}</p><p>{zh?'目前网站仍在持续建设。如果你对相同的问题感兴趣，欢迎通过 GitHub 或邮件联系我。':'The site is continuously evolving. If you care about similar questions, you are welcome to reach out through GitHub or email.'}</p></div></div></section>
+    <section class="focus-list"><p class="eyebrow">CURRENT ORBITS</p>{['AI Agent','Frontend & Backend','Knowledge Management','Industrial AI'].map((item,i)=><div><span>0{i+1}</span><h3>{item}</h3><b>↗</b></div>)}</section>
+  </main>
+</BaseLayout>

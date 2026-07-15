@@ -24,4 +24,24 @@ const notes = defineCollection({
   schema: shared,
 });
 
-export const collections = { blog, notes };
+const projects = defineCollection({
+  loader: glob({ base: './src/content/projects', pattern: '**/*.{md,mdx}' }),
+  schema: shared.extend({
+    year: z.number(),
+    status: z.enum(['active', 'completed', 'archived']).default('active'),
+    stack: z.array(z.string()).default([]),
+    repository: z.url().optional(),
+    website: z.url().optional(),
+  }),
+});
+
+const life = defineCollection({
+  loader: glob({ base: './src/content/life', pattern: '**/*.{md,mdx}' }),
+  schema: shared.extend({
+    kind: z.enum(['reading', 'photography', 'journal', 'travel']).default('journal'),
+    location: z.string().optional(),
+    cover: z.string().optional(),
+  }),
+});
+
+export const collections = { blog, notes, projects, life };

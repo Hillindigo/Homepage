@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+export function getStaticPaths(){return [{params:{lang:'zh'}},{params:{lang:'en'}}]}
+const {lang='zh'}=Astro.params; const zh=lang==='zh'; const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+const notes=(await getCollection('notes',({data})=>data.lang===lang&&!data.draft)).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
+const fmt=new Intl.DateTimeFormat(zh?'zh-CN':'en-US',{year:'numeric',month:'2-digit',day:'2-digit'});
+---
+<BaseLayout lang={lang} title={`${zh?'笔记':'Notes'} · Hillindigo`} description={zh?'短小、持续更新的技术与生活笔记。':'Short, evolving notes on technology and life.'}>
+  <main class="listing-page shell" data-pagefind-body>
+    <header class="listing-head"><p class="eyebrow">02 / NOTES</p><h1>{zh?'随手笔记':'Field Notes'}</h1><p>{zh?'比文章更轻，更接近思考发生时的样子。它们可能保持短小，也可能逐渐长成文章。':'Lighter than essays and closer to thought in motion. Some stay brief; others grow into longer writing.'}</p></header>
+    <div class="note-grid">{notes.map((note,i)=><a class="note-card" href={`${base}/${lang}/notes/${note.id.replace(`${lang}/`,'')}/`}><div class="note-card-top"><span>{String(i+1).padStart(2,'0')}</span><time>{fmt.format(note.data.pubDate)}</time></div><h2>{note.data.title}</h2><p>{note.data.description}</p><div class="article-tags">{note.data.tags.map(tag=><span>{tag}</span>)}</div><b>{zh?'阅读笔记':'Read note'} ↗</b></a>)}</div>
+    {notes.length===0&&<p class="collection-empty">{zh?'英文笔记正在整理中。':'Notes are being prepared.'}</p>}
+  </main>
+</BaseLayout>
