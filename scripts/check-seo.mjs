@@ -47,9 +47,15 @@ for (const file of htmlFiles) {
   for (const property of ['og:title', 'og:description', 'og:image', 'og:image:alt', 'og:locale']) {
     if (!meta('property', property)) problems.push(`${relative}: missing ${property}`);
   }
+  if (meta('property', 'og:image:width') !== '1200') problems.push(`${relative}: og:image:width must be 1200`);
+  if (meta('property', 'og:image:height') !== '630') problems.push(`${relative}: og:image:height must be 630`);
+  if (meta('property', 'og:image:type') !== 'image/jpeg') problems.push(`${relative}: og:image:type must be image/jpeg`);
+  if (!meta('property', 'og:image')?.endsWith('/images/social-card.jpg')) problems.push(`${relative}: og:image must use the social card`);
   for (const name of ['twitter:card', 'twitter:title', 'twitter:description', 'twitter:image', 'twitter:image:alt']) {
     if (!meta('name', name)) problems.push(`${relative}: missing ${name}`);
   }
+  if (meta('name', 'twitter:card') !== 'summary_large_image') problems.push(`${relative}: twitter:card must be summary_large_image`);
+  if (meta('name', 'twitter:image') !== meta('property', 'og:image')) problems.push(`${relative}: twitter:image must match og:image`);
   for (const hreflang of ['zh-CN', 'en', 'x-default']) {
     if (!alternates.has(hreflang)) problems.push(`${relative}: missing hreflang ${hreflang}`);
   }
