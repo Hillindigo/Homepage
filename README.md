@@ -9,6 +9,14 @@ npm install
 npm run dev
 ```
 
+预览尚未发布的草稿：
+
+```bash
+npm run dev:drafts
+```
+
+草稿模式仅在 Astro 开发服务器中生效；`npm run build` 与 GitHub Pages 部署始终排除 `draft: true` 的内容。
+
 生产验证：
 
 ```bash

@@ -2,7 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import readingTime from 'reading-time';
 import ArticleLayout from '../../../layouts/ArticleLayout.astro';
-export async function getStaticPaths(){const entries=await getCollection('life',({data})=>!data.draft);return entries.map(entry=>({params:{lang:entry.data.lang,slug:entry.id.replace(`${entry.data.lang}/`,'')},props:{entry}}))}
+import { isVisibleContent } from '../../../lib/content';
+export async function getStaticPaths(){const entries=await getCollection('life',({data})=>isVisibleContent(data));return entries.map(entry=>({params:{lang:entry.data.lang,slug:entry.id.replace(`${entry.data.lang}/`,'')},props:{entry}}))}
 const {entry}=Astro.props; const {Content,headings}=await render(entry); const minutes=Math.max(1,Math.ceil(readingTime(entry.body??'').minutes));
 ---
 <ArticleLayout entry={entry} readingMinutes={minutes} headings={headings} section="LIFE"><Content/></ArticleLayout>

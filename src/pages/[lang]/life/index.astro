@@ -1,14 +1,15 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { isVisibleContent } from '../../../lib/content';
 export function getStaticPaths(){return [{params:{lang:'zh'}},{params:{lang:'en'}}]}
 const {lang='zh'}=Astro.params; const zh=lang==='zh'; const base=import.meta.env.BASE_URL.replace(/\/$/,'');
-const entries=(await getCollection('life',({data})=>data.lang===lang&&!data.draft)).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
+const entries=(await getCollection('life',({data})=>data.lang===lang&&isVisibleContent(data))).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
 const kind={reading:zh?'阅读':'Reading',photography:zh?'摄影':'Photography',journal:zh?'日常':'Journal',travel:zh?'行走':'Travel'};
 ---
 <BaseLayout lang={lang} title={`${zh?'生活':'Life'} · Hillindigo`} description={zh?'技术之外的阅读、摄影与日常观察。':'Reading, photography and observations beyond technology.'}>
   <main class="listing-page shell" data-pagefind-ignore>
     <header class="listing-head"><p class="eyebrow">04 / LIFE</p><h1>{zh?'技术之外':'Beyond the Screen'}</h1><p>{zh?'生活不是技术内容之间的空白。这里保存阅读、行走、摄影与那些不必立刻产生价值的时刻。':'Life is not the gap between technical posts. This space keeps books, walks, images and moments that need no immediate utility.'}</p></header>
-    <div class="life-grid">{entries.map((entry,i)=><a class={`life-card life-${entry.data.kind}`} href={`${base}/${lang}/life/${entry.id.replace(`${lang}/`,'')}/`}><div class="life-art"><span>{String(i+1).padStart(2,'0')}</span><em>{kind[entry.data.kind]}</em><i></i></div><div><p class="eyebrow">{entry.data.location??kind[entry.data.kind]}</p><h2>{entry.data.title}</h2><p>{entry.data.description}</p></div></a>)}</div>
+    <div class="life-grid">{entries.map((entry,i)=><a class={`life-card life-${entry.data.kind}`} href={`${base}/${lang}/life/${entry.id.replace(`${lang}/`,'')}/`}><div class="life-art"><span>{String(i+1).padStart(2,'0')}</span><em>{kind[entry.data.kind]}</em><i></i></div><div><p class="eyebrow">{entry.data.location??kind[entry.data.kind]}</p>{entry.data.draft&&<span class="draft-badge">DRAFT</span>}<h2>{entry.data.title}</h2><p>{entry.data.description}</p></div></a>)}</div>
   </main>
 </BaseLayout>

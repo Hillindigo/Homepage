@@ -6,6 +6,7 @@ import RelatedContent from '../components/RelatedContent.astro';
 import CodeCopy from '../components/CodeCopy.astro';
 import BackToTop from '../components/BackToTop.astro';
 import { getCollection } from 'astro:content';
+import { isVisibleContent } from '../lib/content';
 const { entry, readingMinutes, headings=[], section='WRITING', comments=true, navigation={} } = Astro.props;
 const { title, description, pubDate, updatedDate, tags, lang } = entry.data;
 const date = new Intl.DateTimeFormat(lang==='zh'?'zh-CN':'en-US',{dateStyle:'long'});
@@ -17,7 +18,7 @@ const projectLinks = section==='PROJECTS' ? [
 const otherLang = lang==='zh'?'en':'zh';
 const definitions=[['blog','writing'],['notes','notes'],['projects','projects'],['life','life']] as const;
 const contentGroups=await Promise.all(definitions.map(async([collection,itemRoute])=>{
-  const entries=await getCollection(collection,({data})=>!data.draft);
+  const entries=await getCollection(collection,({data})=>isVisibleContent(data));
   return entries.map(candidate=>({entry:candidate,route:itemRoute}));
 }));
 const allContent=contentGroups.flat();
@@ -63,6 +64,7 @@ const structuredData={
   <div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
   <main class="article-shell shell" data-pagefind-body>
     <article class="article">
+      {entry.data.draft&&<aside class="draft-preview" role="status"><strong>DRAFT PREVIEW</strong><span>{lang==='zh'?'此内容仅在本地草稿模式中可见，不会进入正式构建。':'This entry is visible only in local draft mode and will not enter production builds.'}</span></aside>}
       <header class="article-header"><p class="eyebrow" data-pagefind-filter={sectionFilter}>HILLINDIGO / {section}</p><h1 data-pagefind-meta="title">{title}</h1><p class="article-description" data-pagefind-meta="description">{description}</p><div class="article-meta"><time datetime={pubDate.toISOString()}>{date.format(pubDate)}</time><span>{readingMinutes} {lang==='zh'?'分钟阅读':'min read'}</span>{updatedDate&&<span>{lang==='zh'?'更新于':'Updated'} {date.format(updatedDate)}</span>}</div><div class="article-tags">{tags.map((tag:string)=><a data-pagefind-filter={tagFilter} href={`${base}/${lang}/tags/${encodeURIComponent(tag)}/`}>{tag}</a>)}</div>{projectLinks.length>0&&<div class="article-actions">{projectLinks.map((link:any)=><a href={link.href} target="_blank" rel="noreferrer">{link.label} ↗</a>)}</div>}</header>
       <div class="article-layout"><aside class="toc" data-pagefind-ignore><p class="eyebrow">{lang==='zh'?'目录':'CONTENTS'}</p><nav>{headings.filter((h:any)=>h.depth<=3).map((h:any)=><a class={`depth-${h.depth}`} href={`#${h.slug}`}>{h.text}</a>)}</nav></aside><div class="prose"><slot/></div></div>
       <ShareActions lang={lang} title={title}/>

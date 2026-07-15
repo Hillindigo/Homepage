@@ -2,8 +2,9 @@
 import { getCollection, render } from 'astro:content';
 import readingTime from 'reading-time';
 import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+import { isVisibleContent } from '../../../lib/content';
 export async function getStaticPaths(){
-  const posts=await getCollection('blog',({data})=>!data.draft);
+const posts=await getCollection('blog',({data})=>isVisibleContent(data));
   const base=import.meta.env.BASE_URL.replace(/\/$/,'');
   return posts.map(entry=>{
     const siblings=posts.filter(post=>post.data.lang===entry.data.lang).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
