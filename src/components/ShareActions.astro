@@ -1,9 +1,9 @@
 ---
-const { lang='zh', title='' } = Astro.props;
+const { lang='zh', title='', sourceUrl } = Astro.props;
 ---
 <section class="share-actions" data-share-actions data-pagefind-ignore data-title={title} aria-label={lang==='zh'?'分享文章':'Share article'}>
   <span class="eyebrow">{lang==='zh'?'分享这篇内容':'SHARE THIS'}</span>
-  <div><button type="button" data-native-share>{lang==='zh'?'分享':'Share'} ↗</button><button type="button" data-copy-link>{lang==='zh'?'复制链接':'Copy link'}</button><button type="button" data-print-article>{lang==='zh'?'打印':'Print'}</button></div>
+  <div><button type="button" data-native-share>{lang==='zh'?'分享':'Share'} ↗</button><button type="button" data-copy-link>{lang==='zh'?'复制链接':'Copy link'}</button><button type="button" data-print-article>{lang==='zh'?'打印':'Print'}</button>{sourceUrl&&<a href={sourceUrl} target="_blank" rel="noreferrer">{lang==='zh'?'查看源码':'View source'} ↗</a>}</div>
   <p class="share-status" data-share-status aria-live="polite"></p>
 </section>
 <script>
