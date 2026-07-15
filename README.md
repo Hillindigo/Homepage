@@ -12,10 +12,10 @@ npm run dev
 生产验证：
 
 ```bash
-npm run check
-npm run build
-npm run preview
+npm run validate
 ```
+
+该命令会依次检查内容 Frontmatter 与双语对应关系、Astro 类型、生产构建以及全部站内链接。验证通过后可使用 `npm run preview` 查看最终产物。
 
 Pagefind 搜索索引只会在 `npm run build` 后生成，因此全文搜索请使用生产预览验证。
 
