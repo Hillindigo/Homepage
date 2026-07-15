@@ -1,9 +1,14 @@
 ---
 const { src, class: className = '' } = Astro.props;
 ---
-<video class={`video-bg ${className}`} data-fading-video src={src} autoplay muted playsinline preload="auto"></video>
+<video class={`video-bg ${className}`} data-fading-video src={src} autoplay muted playsinline preload="metadata" aria-hidden="true" tabindex="-1"></video>
 <script>
   const setup = (video: HTMLVideoElement) => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      video.addEventListener('loadeddata',()=>{video.pause();video.currentTime=0;video.style.opacity='1'},{once:true});
+      return () => {};
+    }
     let raf = 0; let fading = false; let timer = 0;
     const fadeTo = (target: number, duration = 500) => {
       cancelAnimationFrame(raf); const from = Number(video.style.opacity || 0); const start = performance.now();
