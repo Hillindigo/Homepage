@@ -21,8 +21,22 @@ const translation=entry.data.translationKey?candidates.find(item=>item.data.lang
 const route=section==='WRITING'?'writing':section.toLowerCase();
 const translationSlug=translation?.id.replace(`${otherLang}/`,'');
 const alternatePath=translation?`${base}/${otherLang}/${route}/${translationSlug}/`:`${base}/${otherLang}/`;
+const canonicalUrl=new URL(Astro.url.pathname,Astro.site).href;
+const structuredData={
+  '@context':'https://schema.org',
+  '@type':section==='WRITING'?'BlogPosting':'Article',
+  headline:title,
+  description,
+  datePublished:pubDate.toISOString(),
+  dateModified:(updatedDate??pubDate).toISOString(),
+  inLanguage:lang==='zh'?'zh-CN':'en',
+  keywords:tags.join(', '),
+  mainEntityOfPage:canonicalUrl,
+  image:new URL(`${base}/images/avatar.png`,Astro.site).href,
+  author:{'@type':'Person',name:'Hillindigo',url:'https://github.com/Hillindigo'},
+};
 ---
-<BaseLayout lang={lang} title={`${title} · Hillindigo`} description={description} alternatePath={alternatePath}>
+<BaseLayout lang={lang} title={`${title} · Hillindigo`} description={description} alternatePath={alternatePath} structuredData={structuredData} ogType="article" publishedTime={pubDate.toISOString()} modifiedTime={(updatedDate??pubDate).toISOString()}>
   <div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
   <main class="article-shell shell" data-pagefind-body>
     <article class="article">
