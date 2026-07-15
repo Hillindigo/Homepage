@@ -1,20 +1,22 @@
 ---
-const { lang='zh', title='', sourceUrl } = Astro.props;
+const { lang='zh', title='', sourceUrl, citation='' } = Astro.props;
 ---
-<section class="share-actions" data-share-actions data-pagefind-ignore data-title={title} aria-label={lang==='zh'?'分享文章':'Share article'}>
+<section class="share-actions" data-share-actions data-pagefind-ignore data-title={title} data-citation={citation} aria-label={lang==='zh'?'分享文章':'Share article'}>
   <span class="eyebrow">{lang==='zh'?'分享这篇内容':'SHARE THIS'}</span>
-  <div><button type="button" data-native-share>{lang==='zh'?'分享':'Share'} ↗</button><button type="button" data-copy-link>{lang==='zh'?'复制链接':'Copy link'}</button><button type="button" data-print-article>{lang==='zh'?'打印':'Print'}</button>{sourceUrl&&<a href={sourceUrl} target="_blank" rel="noreferrer">{lang==='zh'?'查看源码':'View source'} ↗</a>}</div>
+  <div><button type="button" data-native-share>{lang==='zh'?'分享':'Share'} ↗</button><button type="button" data-copy-link>{lang==='zh'?'复制链接':'Copy link'}</button><button type="button" data-copy-citation>{lang==='zh'?'复制引用':'Copy citation'}</button><button type="button" data-print-article>{lang==='zh'?'打印':'Print'}</button>{sourceUrl&&<a href={sourceUrl} target="_blank" rel="noreferrer">{lang==='zh'?'查看源码':'View source'} ↗</a>}</div>
   <p class="share-status" data-share-status aria-live="polite"></p>
 </section>
 <script>
   const root=document.querySelector<HTMLElement>('[data-share-actions]');
   if(root){
     const status=root.querySelector<HTMLElement>('[data-share-status]');
-    const copy=async()=>{try{await navigator.clipboard.writeText(location.href);if(status)status.textContent=document.documentElement.lang==='zh'?'链接已复制':'Link copied';}catch{const zh=document.documentElement.lang==='zh';window.prompt(zh?'请复制这个链接':'Copy this link',location.href);if(status)status.textContent=zh?'请复制上方链接':'Copy the link above';}};
-    root.querySelector('[data-copy-link]')?.addEventListener('click',copy);
+    const write=async(value:string,kind:'link'|'citation')=>{const zh=document.documentElement.lang==='zh';try{await navigator.clipboard.writeText(value);if(status)status.textContent=kind==='citation'?(zh?'引用已复制':'Citation copied'):(zh?'链接已复制':'Link copied');}catch{window.prompt(kind==='citation'?(zh?'请复制这条引用':'Copy this citation'):(zh?'请复制这个链接':'Copy this link'),value);if(status)status.textContent=zh?'请复制上方内容':'Copy the text above';}};
+    const copyLink=()=>write(location.href,'link');
+    root.querySelector('[data-copy-link]')?.addEventListener('click',copyLink);
+    root.querySelector('[data-copy-citation]')?.addEventListener('click',()=>write(root.dataset.citation??'','citation'));
     root.querySelector('[data-print-article]')?.addEventListener('click',()=>window.print());
     const shareButton=root.querySelector<HTMLButtonElement>('[data-native-share]');
     if(!navigator.share) shareButton?.setAttribute('hidden','');
-    shareButton?.addEventListener('click',async()=>{try{await navigator.share({title:root.dataset.title,url:location.href})}catch(error){if((error as DOMException).name!=='AbortError')await copy();}});
+    shareButton?.addEventListener('click',async()=>{try{await navigator.share({title:root.dataset.title,url:location.href})}catch(error){if((error as DOMException).name!=='AbortError')await copyLink();}});
   }
 </script>
