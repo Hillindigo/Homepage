@@ -1,0 +1,25 @@
+<script>
+  const zh=document.documentElement.lang==='zh';
+  const labels={copy:zh?'复制代码':'Copy code',copied:zh?'已复制':'Copied',prompt:zh?'请复制以下代码':'Copy the code below'};
+  for(const block of document.querySelectorAll<HTMLElement>('.prose pre')){
+    const code=block.querySelector('code');
+    if(!code||block.querySelector('.code-copy'))continue;
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='code-copy';
+    button.textContent=labels.copy;
+    button.setAttribute('aria-label',labels.copy);
+    button.addEventListener('click',async()=>{
+      const value=code.textContent??'';
+      try{
+        await navigator.clipboard.writeText(value);
+        button.textContent=labels.copied;
+        button.dataset.copied='true';
+        window.setTimeout(()=>{button.textContent=labels.copy;delete button.dataset.copied},1600);
+      }catch{
+        window.prompt(labels.prompt,value);
+      }
+    });
+    block.append(button);
+  }
+</script>
