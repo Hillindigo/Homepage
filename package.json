@@ -8,6 +8,8 @@
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "check": "astro check",
+    "check:links": "node scripts/check-links.mjs",
+    "validate": "npm run check && npm run build && npm run check:links",
     "new": "node scripts/new-content.mjs"
   },
   "dependencies": {
