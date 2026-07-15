@@ -10,7 +10,7 @@ const { lang='zh', title='' } = Astro.props;
   const root=document.querySelector<HTMLElement>('[data-share-actions]');
   if(root){
     const status=root.querySelector<HTMLElement>('[data-share-status]');
-    const copy=async()=>{try{await navigator.clipboard.writeText(location.href);if(status)status.textContent=document.documentElement.lang==='zh'?'链接已复制':'Link copied';}catch{const input=document.createElement('textarea');input.value=location.href;document.body.appendChild(input);input.select();document.execCommand('copy');input.remove();if(status)status.textContent=document.documentElement.lang==='zh'?'链接已复制':'Link copied';}};
+    const copy=async()=>{try{await navigator.clipboard.writeText(location.href);if(status)status.textContent=document.documentElement.lang==='zh'?'?????':'Link copied';}catch{const zh=document.documentElement.lang==='zh';window.prompt(zh?'???????':'Copy this link',location.href);if(status)status.textContent=zh?'???????':'Copy the link above';}};
     root.querySelector('[data-copy-link]')?.addEventListener('click',copy);
     const shareButton=root.querySelector<HTMLButtonElement>('[data-native-share]');
     if(!navigator.share) shareButton?.setAttribute('hidden','');
