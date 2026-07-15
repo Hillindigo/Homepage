@@ -46,6 +46,15 @@ npm run new -- writing zh my-first-post "文章标题" "一句话摘要"
 
 `--type` 支持 `writing`、`notes`、`projects`、`life`。正式发布前将文件中的 `draft` 改为 `false`。
 
+中英文草稿准备完成后，可以按共用的 `translationKey` 同时发布：
+
+```bash
+npm run publish -- writing my-first-post --dry-run
+npm run publish -- writing my-first-post
+```
+
+发布命令会在修改文件前检查中英文是否都存在、是否同为草稿、是否填写标签与正文。`--dry-run` 只显示即将发布的文件，不会改动内容。发布后运行 `npm run validate` 再提交。
+
 ## 可选服务
 
 复制 `.env.example` 为 `.env` 后填写：
