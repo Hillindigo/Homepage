@@ -87,5 +87,29 @@ const structuredData={
     const setActive=(id:string)=>links.forEach(link=>link.toggleAttribute('aria-current',decodeURIComponent(link.hash.slice(1))===id));
     const updateActive=()=>{if(!headings.length)return;const current=[...headings].reverse().find(heading=>heading.getBoundingClientRect().top<=170)??headings[0];setActive(current.id);};
     window.addEventListener('scroll',updateActive,{passive:true});updateActive();
+    const isChinese=document.documentElement.lang==='zh';
+    headings.forEach(heading=>{
+      const anchor=document.createElement('a');
+      anchor.className='heading-anchor';
+      anchor.href=`#${encodeURIComponent(heading.id)}`;
+      anchor.textContent='#';
+      anchor.setAttribute('aria-label',`${isChinese?'复制本节链接':'Copy link to section'}：${heading.textContent?.trim()??heading.id}`);
+      anchor.title=isChinese?'复制本节链接':'Copy link to section';
+      anchor.addEventListener('click',()=>{
+        const url=new URL(window.location.href);
+        url.hash=heading.id;
+        navigator.clipboard?.writeText(url.href).then(()=>{
+          anchor.dataset.copied='true';
+          anchor.textContent='✓';
+          anchor.setAttribute('aria-label',isChinese?'本节链接已复制':'Section link copied');
+          window.setTimeout(()=>{
+            anchor.removeAttribute('data-copied');
+            anchor.textContent='#';
+            anchor.setAttribute('aria-label',`${isChinese?'复制本节链接':'Copy link to section'}：${heading.textContent?.replace('#','').trim()??heading.id}`);
+          },1600);
+        }).catch(()=>{});
+      });
+      heading.append(anchor);
+    });
   </script>
 </BaseLayout>
