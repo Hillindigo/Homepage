@@ -1,0 +1,7 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+---
+<BaseLayout lang="zh" title="404 · Signal Lost · Hillindigo" description="The requested page could not be found." header={false} alternatePath={`${base}/en/`}>
+  <main class="not-found"><div class="grain"></div><div class="not-found-orbit" aria-hidden="true"><i></i><i></i><i></i></div><div class="not-found-content"><p class="eyebrow">ERROR / 404 / SIGNAL LOST</p><h1>这条轨道<br/>尚不存在</h1><p>你访问的页面可能已经移动、改名，或者仍未被写下。<br/><span>The page may have moved, changed its name, or not been written yet.</span></p><div class="hero-actions"><a class="button primary" href={`${base}/zh/`}>返回中文首页</a><a class="button" href={`${base}/en/`}>English home ↗</a></div></div><a class="not-found-brand" href={`${base}/zh/`}><img src={`${base}/images/avatar.png`} alt=""/>青山黛 · Hillindigo</a></main>
+</BaseLayout>
