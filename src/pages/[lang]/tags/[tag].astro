@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+export async function getStaticPaths(){
+  const definitions = [['blog','writing'],['notes','notes'],['projects','projects'],['life','life']] as const;
+  const groups = await Promise.all(definitions.map(async ([collection,section]) => {
+    const entries = await getCollection(collection,({data})=>!data.draft);
+    return entries.map(entry=>({entry,section}));
+  }));
+  const all = groups.flat();
+  const keys = [...new Set(all.flatMap(({entry})=>entry.data.tags.map(tag=>`${entry.data.lang}\0${tag}`)))];
+  return keys.map(key=>{const [lang,tag]=key.split('\0');return {params:{lang,tag},props:{items:all.filter(({entry})=>entry.data.lang===lang&&entry.data.tags.includes(tag))}};});
+}
+const {lang='zh',tag=''}=Astro.params; const {items}=Astro.props; const zh=lang==='zh'; const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+const date=new Intl.DateTimeFormat(zh?'zh-CN':'en-US',{year:'numeric',month:'short',day:'numeric'});
+const labels:Record<string,string>=zh?{writing:'文章',notes:'笔记',projects:'项目',life:'生活'}:{writing:'Writing',notes:'Notes',projects:'Projects',life:'Life'};
+---
+<BaseLayout lang={lang} title={`${tag} · ${zh?'标签':'Tag'} · Hillindigo`} description={`${zh?'与标签相关的内容：':'Content tagged with '}${tag}`}>
+  <main class="listing-page shell" data-pagefind-body>
+    <header class="tag-head"><p class="eyebrow">HILLINDIGO / TAG</p><h1>#{tag}</h1><p>{zh?`共 ${items.length} 条相关内容。`:`${items.length} ${items.length===1?'entry':'entries'} in this orbit.`}</p></header>
+    <div class="post-list">{items.sort((a:any,b:any)=>b.entry.data.pubDate.valueOf()-a.entry.data.pubDate.valueOf()).map(({entry,section}:any,i:number)=><a class="post-row" href={`${base}/${lang}/${section}/${entry.id.replace(`${lang}/`,'')}/`}><span class="post-index">{String(i+1).padStart(2,'0')}</span><div><p class="eyebrow">{labels[section]}</p><h2>{entry.data.title}</h2><p>{entry.data.description}</p></div><time>{date.format(entry.data.pubDate)}</time><b>↗</b></a>)}</div>
+  </main>
+</BaseLayout>
