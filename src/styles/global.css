@@ -26,3 +26,5 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
 .tag-head{margin-bottom:70px}.tag-head h1{font:italic 400 clamp(4rem,8vw,7rem)/.9 var(--serif);letter-spacing:-.045em;margin:24px 0}.tag-head>p:last-child{color:var(--muted);font-size:.82rem}
+.archive-year{display:grid;grid-template-columns:180px 1fr;border-top:1px solid var(--line);padding:35px 0}.archive-year h2{font:italic 400 3.5rem/1 var(--serif);margin:0}.archive-year>div a{display:grid;grid-template-columns:100px 80px 1fr 20px;gap:18px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}.archive-year time,.archive-year a>span{font:400 .56rem var(--mono);color:var(--muted)}.archive-year strong{font:400 1rem var(--sans)}.archive-year b{font-weight:400}.archive-year a:hover strong{color:var(--yellow)}
+@media(max-width:800px){.archive-year{grid-template-columns:1fr;gap:25px}.archive-year>div a{grid-template-columns:72px 1fr 18px}.archive-year a>span{display:none}}
