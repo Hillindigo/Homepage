@@ -1,0 +1,24 @@
+---
+const { lang = 'zh', items = [] } = Astro.props;
+const zh = lang === 'zh';
+const labels: Record<string, string> = zh
+  ? { writing: '文章', notes: '笔记', projects: '项目', life: '生活' }
+  : { writing: 'Writing', notes: 'Notes', projects: 'Projects', life: 'Life' };
+---
+
+{items.length > 0 && (
+  <aside class="related-content" aria-labelledby="related-title">
+    <p class="eyebrow">{zh ? '继续探索' : 'KEEP EXPLORING'}</p>
+    <h2 id="related-title">{zh ? '你可能还会喜欢' : 'You may also like'}</h2>
+    <div>
+      {items.map((item: any, index: number) => (
+        <a href={item.href}>
+          <span>{String(index + 1).padStart(2, '0')} / {labels[item.route]}</span>
+          <strong>{item.title}</strong>
+          <p>{item.description}</p>
+          <b>↗</b>
+        </a>
+      ))}
+    </div>
+  </aside>
+)}

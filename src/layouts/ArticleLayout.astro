@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Comments from '../components/Comments.astro';
 import ShareActions from '../components/ShareActions.astro';
+import RelatedContent from '../components/RelatedContent.astro';
 import { getCollection } from 'astro:content';
 const { entry, readingMinutes, headings=[], section='WRITING', comments=true, navigation={} } = Astro.props;
 const { title, description, pubDate, updatedDate, tags, lang } = entry.data;
@@ -12,15 +13,33 @@ const projectLinks = section==='PROJECTS' ? [
   entry.data.repository&&{label:lang==='zh'?'查看源码':'Source code',href:entry.data.repository},
 ].filter(Boolean) : [];
 const otherLang = lang==='zh'?'en':'zh';
-let candidates:any[]=[];
-if(section==='WRITING') candidates=await getCollection('blog',({data})=>!data.draft);
-if(section==='NOTES') candidates=await getCollection('notes',({data})=>!data.draft);
-if(section==='PROJECTS') candidates=await getCollection('projects',({data})=>!data.draft);
-if(section==='LIFE') candidates=await getCollection('life',({data})=>!data.draft);
-const translation=entry.data.translationKey?candidates.find(item=>item.data.lang===otherLang&&item.data.translationKey===entry.data.translationKey):undefined;
+const definitions=[['blog','writing'],['notes','notes'],['projects','projects'],['life','life']] as const;
+const contentGroups=await Promise.all(definitions.map(async([collection,itemRoute])=>{
+  const entries=await getCollection(collection,({data})=>!data.draft);
+  return entries.map(candidate=>({entry:candidate,route:itemRoute}));
+}));
+const allContent=contentGroups.flat();
 const route=section==='WRITING'?'writing':section.toLowerCase();
+const candidates=allContent.filter(item=>item.route===route).map(item=>item.entry);
+const translation=entry.data.translationKey?candidates.find(item=>item.data.lang===otherLang&&item.data.translationKey===entry.data.translationKey):undefined;
 const translationSlug=translation?.id.replace(`${otherLang}/`,'');
 const alternatePath=translation?`${base}/${otherLang}/${route}/${translationSlug}/`:`${base}/${otherLang}/`;
+const tagSet=new Set(tags);
+const related=allContent
+  .filter(item=>item.entry.data.lang===lang&&(item.route!==route||item.entry.id!==entry.id))
+  .map(item=>({...item,score:item.entry.data.tags.filter(tag=>tagSet.has(tag)).length}))
+  .filter(item=>item.score>0)
+  .sort((a,b)=>b.score-a.score||b.entry.data.pubDate.valueOf()-a.entry.data.pubDate.valueOf())
+  .slice(0,3)
+  .map(item=>{
+    const slug=item.entry.id.replace(`${lang}/`,'');
+    return {
+      route:item.route,
+      title:item.entry.data.title,
+      description:item.entry.data.description,
+      href:`${base}/${lang}/${item.route}/${slug}/`,
+    };
+  });
 const canonicalUrl=new URL(Astro.url.pathname,Astro.site).href;
 const structuredData={
   '@context':'https://schema.org',
@@ -44,6 +63,7 @@ const structuredData={
       <div class="article-layout"><aside class="toc"><p class="eyebrow">{lang==='zh'?'目录':'CONTENTS'}</p><nav>{headings.filter((h:any)=>h.depth<=3).map((h:any)=><a class={`depth-${h.depth}`} href={`#${h.slug}`}>{h.text}</a>)}</nav></aside><div class="prose"><slot/></div></div>
       <ShareActions lang={lang} title={title}/>
       {(navigation.previous||navigation.next)&&<nav class="article-navigation" aria-label={lang==='zh'?'文章导航':'Article navigation'}>{navigation.previous?<a href={navigation.previous.href}><span>{lang==='zh'?'上一篇':'Previous'}</span><strong>{navigation.previous.title}</strong></a>:<i></i>}{navigation.next&&<a class="next" href={navigation.next.href}><span>{lang==='zh'?'下一篇':'Next'}</span><strong>{navigation.next.title}</strong></a>}</nav>}
+      <RelatedContent lang={lang} items={related}/>
       {comments&&<Comments lang={lang}/>} 
     </article>
   </main>
