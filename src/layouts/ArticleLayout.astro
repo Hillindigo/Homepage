@@ -4,6 +4,7 @@ import Comments from '../components/Comments.astro';
 import ShareActions from '../components/ShareActions.astro';
 import RelatedContent from '../components/RelatedContent.astro';
 import CodeCopy from '../components/CodeCopy.astro';
+import BackToTop from '../components/BackToTop.astro';
 import { getCollection } from 'astro:content';
 const { entry, readingMinutes, headings=[], section='WRITING', comments=true, navigation={} } = Astro.props;
 const { title, description, pubDate, updatedDate, tags, lang } = entry.data;
@@ -71,6 +72,7 @@ const structuredData={
     </article>
   </main>
   <CodeCopy/>
+  <BackToTop lang={lang}/>
   <script>
     const article=document.querySelector<HTMLElement>('.article');
     const progress=document.querySelector<HTMLElement>('[data-reading-progress]');

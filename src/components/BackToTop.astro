@@ -1,0 +1,18 @@
+---
+const { lang = 'zh' } = Astro.props;
+---
+
+<button class="back-to-top" type="button" data-back-to-top aria-label={lang==='zh'?'返回顶部':'Back to top'}>
+  <span aria-hidden="true">↑</span>
+  <small>TOP</small>
+</button>
+<script>
+  const button=document.querySelector<HTMLButtonElement>('[data-back-to-top]');
+  if(button){
+    let scheduled=false;
+    const update=()=>{scheduled=false;button.toggleAttribute('data-visible',window.scrollY>640)};
+    window.addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});
+    button.addEventListener('click',()=>window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'}));
+    update();
+  }
+</script>
