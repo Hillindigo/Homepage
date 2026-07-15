@@ -3,11 +3,12 @@ const { lang='zh', term='pathname' } = Astro.props;
 const repoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
 const categoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
 const enabled = Boolean(repoId && categoryId);
+const discussionsUrl = 'https://github.com/Hillindigo/Homepage/discussions';
 ---
 <section class="comments" aria-labelledby="comments-title">
   <p class="eyebrow">{lang==='zh'?'讨论':'DISCUSSION'}</p>
   <h2 id="comments-title">{lang==='zh'?'评论与补充':'Comments & additions'}</h2>
-  {enabled ? <div class="giscus"></div> : <p class="comments-pending">{lang==='zh'?'评论区将在 GitHub Discussions 配置完成后启用。':'Comments will open after GitHub Discussions is configured.'}</p>}
+  {enabled ? <div class="giscus"></div> : <div class="comments-pending"><p>{lang==='zh'?'GitHub Discussions 已开启。内嵌评论启用前，可以直接前往讨论区留言。':'GitHub Discussions is open. Until inline comments are enabled, join the conversation there.'}</p><a href={discussionsUrl} target="_blank" rel="noreferrer">{lang==='zh'?'前往 Discussions':'Open Discussions'} ↗</a></div>}
 </section>
 {enabled && <script is:inline define:vars={{repoId,categoryId,term,lang}}>
   const script=document.createElement('script');
