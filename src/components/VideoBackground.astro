@@ -1,24 +1,29 @@
 ---
-const { src, class: className = '' } = Astro.props;
+const { src, poster, eager=false, class: className = '' } = Astro.props;
 ---
-<video class={`video-bg ${className}`} data-fading-video src={src} autoplay muted playsinline preload="metadata" aria-hidden="true" tabindex="-1"></video>
+{poster&&<img class={`video-bg video-poster ${className}`} src={poster} alt="" loading={eager?'eager':'lazy'} fetchpriority={eager?'high':'low'} decoding="async"/>}
+<video class={`video-bg ${className}`} data-fading-video data-src={src} data-eager={eager||undefined} muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
 <script>
   const setup = (video: HTMLVideoElement) => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion) {
-      video.addEventListener('loadeddata',()=>{video.pause();video.currentTime=0;video.style.opacity='1'},{once:true});
-      return () => {};
-    }
-    let raf = 0; let fading = false; let timer = 0;
+    const saveData=Boolean((navigator as Navigator & {connection?:{saveData?:boolean}}).connection?.saveData);
+    if(reducedMotion||saveData)return;
+    let raf = 0; let fading = false;
     const fadeTo = (target: number, duration = 500) => {
       cancelAnimationFrame(raf); const from = Number(video.style.opacity || 0); const start = performance.now();
       const tick = (now: number) => { const p = Math.min((now-start)/duration,1); video.style.opacity = String(from + (target-from)*(1-Math.pow(1-p,3))); if(p<1) raf=requestAnimationFrame(tick); };
       raf=requestAnimationFrame(tick);
     };
-    video.addEventListener('loadeddata',()=>{video.style.opacity='0';video.play().catch(()=>{});fadeTo(1)});
+    let loaded=false;
+    const load=()=>{if(loaded)return;loaded=true;video.src=video.dataset.src??'';video.load()};
+    video.addEventListener('loadeddata',()=>{video.style.opacity='0';video.play().catch(()=>{});fadeTo(1)},{once:true});
     video.addEventListener('timeupdate',()=>{const left=video.duration-video.currentTime;if(!fading&&left<=.55&&left>0){fading=true;fadeTo(0)}});
-    video.addEventListener('ended',()=>{video.style.opacity='0';timer=window.setTimeout(()=>{video.currentTime=0;video.play().catch(()=>{});fading=false;fadeTo(1)},100)});
-    return()=>{cancelAnimationFrame(raf);clearTimeout(timer)};
+    video.addEventListener('ended',()=>{video.style.opacity='0';window.setTimeout(()=>{video.currentTime=0;video.play().catch(()=>{});fading=false;fadeTo(1)},100)});
+    if('IntersectionObserver'in window){
+      const observer=new IntersectionObserver(([entry])=>{if(entry.isIntersecting){load();if(video.readyState>=2)video.play().catch(()=>{})}else if(loaded)video.pause()},{rootMargin:'0px 0px -25% 0px',threshold:.01});
+      observer.observe(video);
+    }else load();
+    if(video.dataset.eager!==undefined)load();
   };
   document.querySelectorAll<HTMLVideoElement>('[data-fading-video]').forEach(setup);
 </script>
