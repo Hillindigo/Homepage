@@ -1,0 +1,19 @@
+---
+const { lang='zh', title='' } = Astro.props;
+---
+<section class="share-actions" data-share-actions data-title={title} aria-label={lang==='zh'?'分享文章':'Share article'}>
+  <span class="eyebrow">{lang==='zh'?'分享这篇内容':'SHARE THIS'}</span>
+  <div><button type="button" data-native-share>{lang==='zh'?'分享':'Share'} ↗</button><button type="button" data-copy-link>{lang==='zh'?'复制链接':'Copy link'}</button></div>
+  <p class="share-status" data-share-status aria-live="polite"></p>
+</section>
+<script>
+  const root=document.querySelector<HTMLElement>('[data-share-actions]');
+  if(root){
+    const status=root.querySelector<HTMLElement>('[data-share-status]');
+    const copy=async()=>{try{await navigator.clipboard.writeText(location.href);if(status)status.textContent=document.documentElement.lang==='zh'?'链接已复制':'Link copied';}catch{const input=document.createElement('textarea');input.value=location.href;document.body.appendChild(input);input.select();document.execCommand('copy');input.remove();if(status)status.textContent=document.documentElement.lang==='zh'?'链接已复制':'Link copied';}};
+    root.querySelector('[data-copy-link]')?.addEventListener('click',copy);
+    const shareButton=root.querySelector<HTMLButtonElement>('[data-native-share]');
+    if(!navigator.share) shareButton?.setAttribute('hidden','');
+    shareButton?.addEventListener('click',async()=>{try{await navigator.share({title:root.dataset.title,url:location.href})}catch(error){if((error as DOMException).name!=='AbortError')await copy();}});
+  }
+</script>
