@@ -4,15 +4,27 @@ const repoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
 const categoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
 const enabled = Boolean(repoId && categoryId);
 const discussionsUrl = 'https://github.com/Hillindigo/Homepage/discussions';
+const newDiscussionUrl = `${discussionsUrl}/new`;
 ---
 <section class="comments" data-pagefind-ignore aria-labelledby="comments-title">
   <p class="eyebrow">{lang==='zh'?'讨论':'DISCUSSION'}</p>
   <h2 id="comments-title">{lang==='zh'?'评论与补充':'Comments & additions'}</h2>
-  {enabled ? <div class="giscus"></div> : <div class="comments-pending"><p>{lang==='zh'?'GitHub Discussions 已开启。内嵌评论启用前，可以直接前往讨论区留言。':'GitHub Discussions is open. Until inline comments are enabled, join the conversation there.'}</p><a href={discussionsUrl} target="_blank" rel="noreferrer">{lang==='zh'?'前往 Discussions':'Open Discussions'} ↗</a></div>}
+  {enabled&&<div class="giscus" aria-live="polite"></div>}
+  <div class="comments-pending">
+    <p>{enabled
+      ? (lang==='zh'?'你也可以直接在 GitHub Discussions 中补充观点或发起新话题。':'You can also continue the conversation or start a new topic in GitHub Discussions.')
+      : (lang==='zh'?'内嵌评论尚未启用，但 GitHub Discussions 已开放，可以直接前往留言。':'Inline comments are not enabled yet, but GitHub Discussions is open for conversation.')}
+    </p>
+    <div class="comments-links">
+      <a href={newDiscussionUrl} target="_blank" rel="noreferrer">{lang==='zh'?'发起讨论':'Start a discussion'} ↗</a>
+      <a href={discussionsUrl} target="_blank" rel="noreferrer">{lang==='zh'?'浏览全部':'Browse all'} ↗</a>
+    </div>
+  </div>
 </section>
 {enabled && <script is:inline define:vars={{repoId,categoryId,term,lang}}>
   const script=document.createElement('script');
   Object.assign(script,{src:'https://giscus.app/client.js',async:true,crossOrigin:'anonymous'});
+  script.addEventListener('error',()=>document.querySelector('.comments')?.classList.add('giscus-unavailable'));
   const attrs={repo:'Hillindigo/Homepage','repo-id':repoId,category:'Announcements','category-id':categoryId,mapping:term,strict:'0','reactions-enabled':'1','emit-metadata':'0','input-position':'top',theme:document.documentElement.dataset.theme==='light'?'light':'dark',lang:lang==='zh'?'zh-CN':'en',loading:'lazy'};
   Object.entries(attrs).forEach(([key,value])=>script.setAttribute(`data-${key}`,String(value)));
   document.querySelector('.giscus')?.appendChild(script);
