@@ -12,9 +12,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   if (root) {
     const base = root.dataset.base || '';
     const lang = root.dataset.lang || 'zh';
-    import(`${base}/pagefind/pagefind-ui.js`).then(() => {
+    const script = document.createElement('script');
+    script.src = `${base}/pagefind/pagefind-ui.js`;
+    script.onload = () => {
       const PagefindUI = (window as any).PagefindUI;
       if(PagefindUI) new PagefindUI({ element:'#search', showSubResults:true, bundlePath:`${base}/pagefind/`, translations: lang==='zh' ? {placeholder:'搜索',clear_search:'清除',load_more:'加载更多',search_label:'站内搜索',filters_label:'筛选',zero_results:'未找到 [SEARCH_TERM] 相关内容',many_results:'找到 [COUNT] 条结果',one_result:'找到 1 条结果'} : undefined });
-    }).catch(() => { root.classList.add('search-unavailable'); });
+    };
+    script.onerror = () => root.classList.add('search-unavailable');
+    document.head.appendChild(script);
   }
 </script>
