@@ -27,9 +27,8 @@ const alternatePath=translation?`${base}/${otherLang}/${route}/${translationSlug
 const tagSet=new Set(tags);
 const related=allContent
   .filter(item=>item.entry.data.lang===lang&&(item.route!==route||item.entry.id!==entry.id))
-  .map(item=>({...item,score:item.entry.data.tags.filter(tag=>tagSet.has(tag)).length}))
-  .filter(item=>item.score>0)
-  .sort((a,b)=>b.score-a.score||b.entry.data.pubDate.valueOf()-a.entry.data.pubDate.valueOf())
+  .map(item=>({...item,score:item.entry.data.tags.filter(tag=>tagSet.has(tag)).length,sameSection:item.route===route}))
+  .sort((a,b)=>b.score-a.score||Number(b.sameSection)-Number(a.sameSection)||b.entry.data.pubDate.valueOf()-a.entry.data.pubDate.valueOf())
   .slice(0,3)
   .map(item=>{
     const slug=item.entry.id.replace(`${lang}/`,'');
