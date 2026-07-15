@@ -7,7 +7,7 @@ const labels: Record<string, string> = zh
 ---
 
 {items.length > 0 && (
-  <aside class="related-content" aria-labelledby="related-title">
+  <aside class="related-content" data-pagefind-ignore aria-labelledby="related-title">
     <p class="eyebrow">{zh ? '继续探索' : 'KEEP EXPLORING'}</p>
     <h2 id="related-title">{zh ? '你可能还会喜欢' : 'You may also like'}</h2>
     <div>

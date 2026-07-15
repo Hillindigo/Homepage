@@ -7,7 +7,7 @@ const projects=(await getCollection('projects',({data})=>data.lang===lang&&!data
 const statusLabel={active:zh?'进行中':'Active',completed:zh?'已完成':'Completed',archived:zh?'已归档':'Archived'};
 ---
 <BaseLayout lang={lang} title={`${zh?'项目':'Projects'} · Hillindigo`} description={zh?'真实项目、实验和技术决策记录。':'Projects, experiments and the decisions behind them.'}>
-  <main class="listing-page shell" data-pagefind-body>
+  <main class="listing-page shell" data-pagefind-ignore>
     <header class="listing-head"><p class="eyebrow">03 / PROJECTS</p><h1>{zh?'项目与实验':'Selected Work'}</h1><p>{zh?'不只展示结果，也记录为什么开始、怎样取舍，以及哪些部分仍然没有答案。':'More than outcomes: why each project started, the trade-offs made, and what remains unresolved.'}</p></header>
     <div class="project-grid">{projects.map((project,i)=><a class="project-card" href={`${base}/${lang}/projects/${project.id.replace(`${lang}/`,'')}/`}><div class="project-visual"><span>{String(i+1).padStart(2,'0')}</span><strong>{project.data.year}</strong><i></i></div><div class="project-copy"><div class="project-status"><span class={`status-dot ${project.data.status}`}></span>{statusLabel[project.data.status]}</div><h2>{project.data.title}</h2><p>{project.data.description}</p><div class="article-tags">{project.data.stack.map(item=><span>{item}</span>)}</div></div></a>)}</div>
   </main>

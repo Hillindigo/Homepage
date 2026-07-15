@@ -16,7 +16,7 @@ const date=new Intl.DateTimeFormat(zh?'zh-CN':'en-US',{year:'numeric',month:'sho
 const labels:Record<string,string>=zh?{writing:'文章',notes:'笔记',projects:'项目',life:'生活'}:{writing:'Writing',notes:'Notes',projects:'Projects',life:'Life'};
 ---
 <BaseLayout lang={lang} title={`${tag} · ${zh?'标签':'Tag'} · Hillindigo`} description={`${zh?'与标签相关的内容：':'Content tagged with '}${tag}`} alternatePath={`${base}/${zh?'en':'zh'}/`}>
-  <main class="listing-page shell" data-pagefind-body>
+  <main class="listing-page shell" data-pagefind-ignore>
     <header class="tag-head"><p class="eyebrow">HILLINDIGO / TAG</p><h1>#{tag}</h1><p>{zh?`共 ${items.length} 条相关内容。`:`${items.length} ${items.length===1?'entry':'entries'} in this orbit.`}</p></header>
     <div class="post-list">{items.sort((a:any,b:any)=>b.entry.data.pubDate.valueOf()-a.entry.data.pubDate.valueOf()).map(({entry,section}:any,i:number)=><a class="post-row" href={`${base}/${lang}/${section}/${entry.id.replace(`${lang}/`,'')}/`}><span class="post-index">{String(i+1).padStart(2,'0')}</span><div><p class="eyebrow">{labels[section]}</p><h2>{entry.data.title}</h2><p>{entry.data.description}</p></div><time>{date.format(entry.data.pubDate)}</time><b>↗</b></a>)}</div>
   </main>

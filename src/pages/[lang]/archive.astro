@@ -11,7 +11,7 @@ const labels:Record<string,string>=zh?{writing:'文章',notes:'笔记',projects:
 const date=new Intl.DateTimeFormat(zh?'zh-CN':'en-US',{month:'short',day:'numeric'});
 ---
 <BaseLayout lang={lang} title={`${zh?'归档':'Archive'} · Hillindigo`} description={zh?'按时间浏览青山黛的全部公开内容。':'Browse every public entry in chronological order.'}>
-  <main class="listing-page shell" data-pagefind-body>
+  <main class="listing-page shell" data-pagefind-ignore>
     <header class="listing-head"><p class="eyebrow">HILLINDIGO / ARCHIVE</p><h1>{zh?'全部归档':'The Archive'}</h1><p>{zh?`目前收录 ${items.length} 条公开内容，按照首次发布时间排列。`:`${items.length} public entries, ordered by their first publication date.`}</p></header>
     <div class="archive-list">{years.map(year=><section class="archive-year"><h2>{year}</h2><div>{items.filter(({entry})=>entry.data.pubDate.getFullYear()===year).map(({entry,section})=><a href={`${base}/${lang}/${section}/${entry.id.replace(`${lang}/`,'')}/`}><time>{date.format(entry.data.pubDate)}</time><span>{labels[section]}</span><strong>{entry.data.title}</strong><b>↗</b></a>)}</div></section>)}</div>
   </main>
