@@ -30,6 +30,14 @@ src/content/life/{zh,en}/       生活记录
 
 每篇内容使用 Markdown 或 MDX，发布日期、语言、标签和草稿状态由 Frontmatter 管理。`draft: true` 的内容不会出现在构建结果中。
 
+创建一篇默认处于草稿状态的新内容：
+
+```bash
+npm run new -- writing zh my-first-post "文章标题" "一句话摘要"
+```
+
+`--type` 支持 `writing`、`notes`、`projects`、`life`。正式发布前将文件中的 `draft` 改为 `false`。
+
 ## 可选服务
 
 复制 `.env.example` 为 `.env` 后填写：
