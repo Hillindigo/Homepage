@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Comments from '../components/Comments.astro';
+import { getCollection } from 'astro:content';
 const { entry, readingMinutes, headings=[], section='WRITING', comments=true, navigation={} } = Astro.props;
 const { title, description, pubDate, updatedDate, tags, lang } = entry.data;
 const date = new Intl.DateTimeFormat(lang==='zh'?'zh-CN':'en-US',{dateStyle:'long'});
@@ -9,8 +10,18 @@ const projectLinks = section==='PROJECTS' ? [
   entry.data.website&&{label:lang==='zh'?'访问项目':'Visit project',href:entry.data.website},
   entry.data.repository&&{label:lang==='zh'?'查看源码':'Source code',href:entry.data.repository},
 ].filter(Boolean) : [];
+const otherLang = lang==='zh'?'en':'zh';
+let candidates:any[]=[];
+if(section==='WRITING') candidates=await getCollection('blog',({data})=>!data.draft);
+if(section==='NOTES') candidates=await getCollection('notes',({data})=>!data.draft);
+if(section==='PROJECTS') candidates=await getCollection('projects',({data})=>!data.draft);
+if(section==='LIFE') candidates=await getCollection('life',({data})=>!data.draft);
+const translation=entry.data.translationKey?candidates.find(item=>item.data.lang===otherLang&&item.data.translationKey===entry.data.translationKey):undefined;
+const route=section==='WRITING'?'writing':section.toLowerCase();
+const translationSlug=translation?.id.replace(`${otherLang}/`,'');
+const alternatePath=translation?`${base}/${otherLang}/${route}/${translationSlug}/`:`${base}/${otherLang}/`;
 ---
-<BaseLayout lang={lang} title={`${title} · Hillindigo`} description={description}>
+<BaseLayout lang={lang} title={`${title} · Hillindigo`} description={description} alternatePath={alternatePath}>
   <main class="article-shell shell" data-pagefind-body>
     <article class="article">
       <header class="article-header"><p class="eyebrow">HILLINDIGO / {section}</p><h1>{title}</h1><p class="article-description">{description}</p><div class="article-meta"><time datetime={pubDate.toISOString()}>{date.format(pubDate)}</time><span>{readingMinutes} {lang==='zh'?'分钟阅读':'min read'}</span>{updatedDate&&<span>{lang==='zh'?'更新于':'Updated'} {date.format(updatedDate)}</span>}</div><div class="article-tags">{tags.map((tag:string)=><a href={`${base}/${lang}/tags/${encodeURIComponent(tag)}/`}>{tag}</a>)}</div>{projectLinks.length>0&&<div class="article-actions">{projectLinks.map((link:any)=><a href={link.href} target="_blank" rel="noreferrer">{link.label} ↗</a>)}</div>}</header>

@@ -1,12 +1,13 @@
 ---
-const { lang = 'zh' } = Astro.props;
+const { lang = 'zh', alternatePath } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const other = lang === 'zh' ? 'en' : 'zh';
 const nav = lang === 'zh' ? [['文章','writing'],['笔记','notes'],['项目','projects'],['生活','life'],['关于','about']] : [['Writing','writing'],['Notes','notes'],['Projects','projects'],['Life','life'],['About','about']];
 const currentPath = Astro.url.pathname;
+const languageHref = alternatePath || currentPath.replace(`/${lang}/`, `/${other}/`);
 ---
 <header class="site-header"><nav class="nav glass">
   <a class="identity" href={`${base}/${lang}/`}><img src={`${base}/images/avatar.png`} alt="Hillindigo avatar"/><span>青山黛 · Hillindigo</span></a>
   <div class="nav-links">{nav.map(([label,path])=><a href={`${base}/${lang}/${path}/`} aria-current={currentPath.includes(`/${path}/`)?'page':undefined}>{label}</a>)}</div>
-  <div class="nav-tools"><a href={`${base}/${lang}/search/`} aria-label={lang==='zh'?'搜索':'Search'}>⌕</a><a href={`${base}/${other}/`} aria-label="Switch language">{other.toUpperCase()}</a><button data-theme-toggle aria-label={lang==='zh'?'切换深浅主题':'Toggle color theme'}>◐</button><details class="mobile-menu"><summary aria-label={lang==='zh'?'打开导航':'Open navigation'}>☰</summary><div>{nav.map(([label,path])=><a href={`${base}/${lang}/${path}/`} aria-current={currentPath.includes(`/${path}/`)?'page':undefined}>{label}<span>↗</span></a>)}</div></details></div>
+  <div class="nav-tools"><a href={`${base}/${lang}/search/`} aria-label={lang==='zh'?'搜索':'Search'}>⌕</a><a href={languageHref} aria-label={lang==='zh'?'切换到英文':'Switch to Chinese'}>{other.toUpperCase()}</a><button data-theme-toggle aria-label={lang==='zh'?'切换深浅主题':'Toggle color theme'}>◐</button><details class="mobile-menu"><summary aria-label={lang==='zh'?'打开导航':'Open navigation'}>☰</summary><div>{nav.map(([label,path])=><a href={`${base}/${lang}/${path}/`} aria-current={currentPath.includes(`/${path}/`)?'page':undefined}>{label}<span>↗</span></a>)}</div></details></div>
 </nav></header>
