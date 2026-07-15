@@ -50,10 +50,12 @@ npm run new -- writing zh my-first-post "文章标题" "一句话摘要"
 
 复制 `.env.example` 为 `.env` 后填写：
 
-- `PUBLIC_GISCUS_REPO_ID`、`PUBLIC_GISCUS_CATEGORY_ID`：启用 GitHub Discussions 评论。
+- `PUBLIC_GISCUS_REPO_ID`、`PUBLIC_GISCUS_CATEGORY_ID`：安装 [Giscus App](https://github.com/apps/giscus) 后启用 GitHub Discussions 内嵌评论；本仓库的公开 ID 已写入示例文件。
 - `PUBLIC_GOATCOUNTER_ENDPOINT`：启用无后端访问统计，例如 `https://your-code.goatcounter.com`。
 
 未填写时，对应脚本不会加载，不影响网站使用。
+
+GitHub Pages 部署时，请在仓库 `Settings → Secrets and variables → Actions → Variables` 中创建同名变量。部署工作流会自动将它们传给 Astro 构建过程；没有配置时仍会显示可直接访问的 Discussions 入口。
 
 ## 分支与部署
 
