@@ -2,4 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
-<BaseLayout header={false} title="青山黛 · Hillindigo"><main class="content-page"><div class="shell"><p class="eyebrow">HILLINDIGO</p><h1>青山黛</h1><p class="empty-state">Choose your language / 选择语言</p><div class="hero-actions"><a class="button primary" href={`${base}/zh/`}>中文</a><a class="button" href={`${base}/en/`}>English</a></div></div></main></BaseLayout>
+<BaseLayout header={false} title="青山黛 · Hillindigo">
+  <script is:inline define:vars={{base}}>
+    try {
+      const preferred=localStorage.getItem('hillindigo-language');
+      if(preferred==='zh'||preferred==='en')window.location.replace(`${base}/${preferred}/`);
+    } catch {}
+  </script>
+  <main class="content-page"><div class="shell"><p class="eyebrow">HILLINDIGO</p><h1>青山黛</h1><p class="empty-state">Choose your language / 选择语言</p><div class="hero-actions"><a class="button primary" href={`${base}/zh/`}>中文</a><a class="button" href={`${base}/en/`}>English</a></div></div></main>
+</BaseLayout>
