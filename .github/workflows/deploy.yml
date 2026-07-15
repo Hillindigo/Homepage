@@ -13,16 +13,23 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: withastro/action@v5
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Validate, build and upload site
+        uses: withastro/action@v6
+        with:
+          node-version: 24
+          build-cmd: npm run validate
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
