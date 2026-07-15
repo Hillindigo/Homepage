@@ -4,6 +4,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <div class="search-panel glass" data-search-root data-base={base} data-lang={lang}>
   <div id="search"></div>
+  <p class="search-loading" data-search-loading role="status">{lang==='zh'?'正在加载搜索索引…':'Loading search index…'}</p>
+  <div class="search-fallback" data-search-fallback role="status" hidden>
+    <p>{lang==='zh'?'搜索资源暂时加载失败，请检查网络后重试。':'Search could not be loaded. Check your connection and try again.'}</p>
+    <button type="button" data-search-retry>{lang==='zh'?'重新加载':'Try again'}</button>
+  </div>
   <p class="search-hint">{lang === 'zh' ? '搜索文章、笔记、项目与生活。随时按 / 或 Ctrl+K 聚焦搜索。' : 'Search writing, notes, projects and life. Press / or Ctrl+K to focus anytime.'}</p>
 </div>
 <link rel="stylesheet" href={`${base}/pagefind/pagefind-ui.css`}/>
@@ -12,12 +17,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   if (root) {
     const base = root.dataset.base || '';
     const lang = root.dataset.lang || 'zh';
-    const script = document.createElement('script');
-    script.src = `${base}/pagefind/pagefind-ui.js`;
-    script.onload = () => {
+    const loading=root.querySelector<HTMLElement>('[data-search-loading]');
+    const fallback=root.querySelector<HTMLElement>('[data-search-fallback]');
+    const retry=root.querySelector<HTMLButtonElement>('[data-search-retry]');
+    let initialized=false;
+    const setState=(state:'loading'|'ready'|'failed')=>{
+      if(loading)loading.hidden=state!=='loading';
+      if(fallback)fallback.hidden=state!=='failed';
+      root.classList.toggle('search-unavailable',state==='failed');
+    };
+    const initialize = () => {
+      if(initialized)return;
       const PagefindUI = (window as any).PagefindUI;
       if(PagefindUI){
+        initialized=true;
         new PagefindUI({ element:'#search', showSubResults:true, bundlePath:`${base}/pagefind/`, translations: lang==='zh' ? {placeholder:'搜索',clear_search:'清除',load_more:'加载更多',search_label:'站内搜索',filters_label:'筛选',zero_results:'未找到 [SEARCH_TERM] 相关内容',many_results:'找到 [COUNT] 条结果',one_result:'找到 1 条结果'} : undefined });
+        setState('ready');
         const input=root.querySelector<HTMLInputElement>('.pagefind-ui__search-input');
         if(input){
           const readQuery=()=>new URL(window.location.href).searchParams.get('q')??'';
@@ -35,9 +50,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           });
           window.addEventListener('popstate',()=>applyQuery(readQuery()));
         }
+        return;
       }
+      setState('failed');
     };
-    script.onerror = () => root.classList.add('search-unavailable');
-    document.head.appendChild(script);
+    const load=()=>{
+      if(initialized)return;
+      setState('loading');
+      document.querySelector('[data-pagefind-loader]')?.remove();
+      const script=document.createElement('script');
+      script.dataset.pagefindLoader='';
+      script.src=`${base}/pagefind/pagefind-ui.js`;
+      script.onload=initialize;
+      script.onerror=()=>{script.remove();setState('failed')};
+      document.head.appendChild(script);
+    };
+    retry?.addEventListener('click',load);
+    load();
   }
 </script>
