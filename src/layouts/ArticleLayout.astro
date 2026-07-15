@@ -40,7 +40,7 @@ const alternatePath=translation?`${base}/${otherLang}/${route}/${translationSlug
     window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);updateProgress();
     const links=[...document.querySelectorAll<HTMLAnchorElement>('.toc a')];
     const headings=[...document.querySelectorAll<HTMLElement>('.prose h2[id],.prose h3[id]')];
-    const setActive=(id:string)=>links.forEach(link=>link.toggleAttribute('aria-current',link.hash===`#${id}`));
+    const setActive=(id:string)=>links.forEach(link=>link.toggleAttribute('aria-current',decodeURIComponent(link.hash.slice(1))===id));
     const updateActive=()=>{if(!headings.length)return;const current=[...headings].reverse().find(heading=>heading.getBoundingClientRect().top<=170)??headings[0];setActive(current.id);};
     window.addEventListener('scroll',updateActive,{passive:true});updateActive();
   </script>
