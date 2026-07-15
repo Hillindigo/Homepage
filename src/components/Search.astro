@@ -4,7 +4,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <div class="search-panel glass" data-search-root data-base={base} data-lang={lang}>
   <div id="search"></div>
-  <p class="search-hint">{lang === 'zh' ? '搜索文章、笔记与项目。搜索索引在构建后生成。' : 'Search writing, notes and projects. The index is generated after build.'}</p>
+  <p class="search-hint">{lang === 'zh' ? '搜索文章、笔记、项目与生活。随时按 / 或 Ctrl+K 聚焦搜索。' : 'Search writing, notes, projects and life. Press / or Ctrl+K to focus anytime.'}</p>
 </div>
 <link rel="stylesheet" href={`${base}/pagefind/pagefind-ui.css`}/>
 <script>
