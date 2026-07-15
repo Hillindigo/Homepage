@@ -2,7 +2,16 @@
 import { getCollection, render } from 'astro:content';
 import readingTime from 'reading-time';
 import ArticleLayout from '../../../layouts/ArticleLayout.astro';
-export async function getStaticPaths(){const posts=await getCollection('blog',({data})=>!data.draft);return posts.map(entry=>({params:{lang:entry.data.lang,slug:entry.id.replace(`${entry.data.lang}/`,'')},props:{entry}}))}
-const {entry}=Astro.props;const {Content,headings}=await render(entry);const minutes=Math.max(1,Math.ceil(readingTime(entry.body||'').minutes));
+export async function getStaticPaths(){
+  const posts=await getCollection('blog',({data})=>!data.draft);
+  const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+  return posts.map(entry=>{
+    const siblings=posts.filter(post=>post.data.lang===entry.data.lang).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf());
+    const index=siblings.findIndex(post=>post.id===entry.id);
+    const link=(post:typeof entry|undefined)=>post?{title:post.data.title,href:`${base}/${entry.data.lang}/writing/${post.id.replace(`${entry.data.lang}/`,'')}/`}:undefined;
+    return {params:{lang:entry.data.lang,slug:entry.id.replace(`${entry.data.lang}/`,'')},props:{entry,navigation:{previous:link(siblings[index+1]),next:link(siblings[index-1])}}};
+  });
+}
+const {entry,navigation}=Astro.props;const {Content,headings}=await render(entry);const minutes=Math.max(1,Math.ceil(readingTime(entry.body||'').minutes));
 ---
-<ArticleLayout entry={entry} readingMinutes={minutes} headings={headings}><Content/></ArticleLayout>
+<ArticleLayout entry={entry} readingMinutes={minutes} headings={headings} navigation={navigation}><Content/></ArticleLayout>
