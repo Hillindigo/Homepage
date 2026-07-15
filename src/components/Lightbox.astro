@@ -1,0 +1,38 @@
+<dialog class="lightbox" data-lightbox-dialog aria-label="Image preview">
+  <button class="lightbox-close" data-lightbox-close aria-label="Close image preview">×</button>
+  <figure><img data-lightbox-image alt=""/><figcaption data-lightbox-caption></figcaption></figure>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]');
+  const image = dialog?.querySelector<HTMLImageElement>('[data-lightbox-image]');
+  const caption = dialog?.querySelector<HTMLElement>('[data-lightbox-caption]');
+  const triggers = document.querySelectorAll<HTMLElement>('[data-lightbox], .prose img');
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      if (!dialog || !image || !caption) return;
+      const source = trigger instanceof HTMLImageElement ? trigger.currentSrc || trigger.src : trigger.dataset.lightbox;
+      const label = trigger instanceof HTMLImageElement ? trigger.alt : trigger.dataset.caption || '';
+      if (!source) return;
+      image.src = source;
+      image.alt = label;
+      caption.textContent = label;
+      caption.hidden = !label;
+      dialog.showModal();
+    });
+    trigger.setAttribute('role', trigger.getAttribute('role') || 'button');
+    trigger.setAttribute('tabindex', trigger.getAttribute('tabindex') || '0');
+    trigger.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        trigger.click();
+      }
+    });
+  });
+
+  dialog?.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+</script>
