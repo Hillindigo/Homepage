@@ -53,6 +53,7 @@ for (const file of files) {
   }
 
   const { fields, body } = parsed;
+  const isDraft = fields.get('draft') === 'true';
   for (const key of [...requiredShared, ...(collectionRequired[collection] ?? [])]) {
     if (!fields.get(key)) problems.push(`${relative}: missing required field "${key}"`);
   }
@@ -75,15 +76,17 @@ for (const file of files) {
   }
 
   const tags = fields.get('tags');
-  if (tags && (!tags.startsWith('[') || !tags.endsWith(']') || tags === '[]')) {
-    problems.push(`${relative}: tags must be a non-empty inline list, for example [Astro, AI]`);
+  if (tags && (!tags.startsWith('[') || !tags.endsWith(']'))) {
+    problems.push(`${relative}: tags must be an inline list, for example [Astro, AI]`);
+  } else if (!isDraft && tags === '[]') {
+    problems.push(`${relative}: published content must include at least one tag`);
   }
 
   const translationKey = fields.get('translationKey');
   if (translationKey) {
     const key = `${collection}:${translationKey}`;
     const languages = translations.get(key) ?? [];
-    languages.push({ lang: folderLang, relative });
+    languages.push({ lang: folderLang, relative, draft: isDraft });
     translations.set(key, languages);
   }
 }
@@ -92,8 +95,15 @@ for (const [key, entries] of translations) {
   const languages = entries.map((entry) => entry.lang);
   for (const lang of supportedLanguages) {
     const count = languages.filter((value) => value === lang).length;
-    if (count === 0) problems.push(`${key}: translationKey is missing its ${lang} counterpart`);
     if (count > 1) problems.push(`${key}: translationKey is duplicated for ${lang}`);
+  }
+  const published = entries.filter((entry) => !entry.draft);
+  if (published.length > 0) {
+    for (const lang of supportedLanguages) {
+      if (!published.some((entry) => entry.lang === lang)) {
+        problems.push(`${key}: published translationKey is missing its published ${lang} counterpart`);
+      }
+    }
   }
 }
 
