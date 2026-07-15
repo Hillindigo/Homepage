@@ -14,7 +14,8 @@
     "check:links": "node scripts/check-links.mjs",
     "check:rss": "node scripts/check-rss.mjs",
     "check:seo": "node scripts/check-seo.mjs",
-    "validate": "npm run check:config && npm run check:content && npm run check && npm run build && npm run check:links && npm run check:rss && npm run check:seo",
+    "check:sitemap": "node scripts/check-sitemap.mjs",
+    "validate": "npm run check:config && npm run check:content && npm run check && npm run build && npm run check:links && npm run check:rss && npm run check:sitemap && npm run check:seo",
     "new": "node scripts/new-content.mjs",
     "publish": "node scripts/publish-content.mjs"
   },
