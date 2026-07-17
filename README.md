@@ -71,4 +71,4 @@ GitHub Pages 部署时，请在仓库 `Settings → Secrets and variables → Ac
 - `develop`：日常开发与内容更新。
 - `main`：稳定发布分支；合并后由 `.github/workflows/deploy.yml` 自动构建并发布 GitHub Pages。
 
-当前站点配置仍使用 `https://hillindigo.github.io/Homepage/`。切换自定义域名时，需要同步调整 `astro.config.mjs` 中的 `site` 和 `base`。
+当前站点使用自定义域名 `https://hillindigo.cc.cd/`；GitHub Pages 的项目路径 `/Homepage` 不再出现在公开网址中。

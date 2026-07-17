@@ -4,8 +4,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://hillindigo.github.io',
-  base: '/Homepage',
+  site: 'https://hillindigo.cc.cd',
   integrations: [react(), mdx(), sitemap()],
   output: 'static',
   markdown: { shikiConfig: { theme: 'github-dark-dimmed', wrap: true } },

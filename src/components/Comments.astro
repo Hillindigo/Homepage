@@ -1,10 +1,13 @@
 ---
-const { lang='zh', term='pathname' } = Astro.props;
+const { lang='zh', term='pathname', title='', pageUrl='' } = Astro.props;
 const repoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
 const categoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
 const enabled = Boolean(repoId && categoryId);
 const discussionsUrl = 'https://github.com/Hillindigo/Homepage/discussions';
-const newDiscussionUrl = `${discussionsUrl}/new`;
+const discussionTitle=lang==='zh'?`关于《${title}》的讨论`:`Discussion: ${title}`;
+const discussionBody=lang==='zh'?`来源文章：${pageUrl}\n\n我想补充的是：`:`From: ${pageUrl}\n\nI would like to add:`;
+const discussionQuery=new URLSearchParams({category:'general',title:discussionTitle,body:discussionBody});
+const newDiscussionUrl = `${discussionsUrl}/new?${discussionQuery}`;
 ---
 <section class="comments" data-pagefind-ignore aria-labelledby="comments-title">
   <p class="eyebrow">{lang==='zh'?'讨论':'DISCUSSION'}</p>
@@ -16,7 +19,7 @@ const newDiscussionUrl = `${discussionsUrl}/new`;
       : (lang==='zh'?'内嵌评论尚未启用，但 GitHub Discussions 已开放，可以直接前往留言。':'Inline comments are not enabled yet, but GitHub Discussions is open for conversation.')}
     </p>
     <div class="comments-links">
-      <a href={newDiscussionUrl} target="_blank" rel="noreferrer">{lang==='zh'?'发起讨论':'Start a discussion'} ↗</a>
+      <a href={newDiscussionUrl} target="_blank" rel="noreferrer">{lang==='zh'?'针对本文发起讨论':'Discuss this article'} ↗</a>
       <a href={discussionsUrl} target="_blank" rel="noreferrer">{lang==='zh'?'浏览全部':'Browse all'} ↗</a>
     </div>
   </div>

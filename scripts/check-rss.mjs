@@ -2,8 +2,8 @@ import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve('dist');
-const siteOrigin = 'https://hillindigo.github.io';
-const siteBase = '/Homepage';
+const siteOrigin = 'https://hillindigo.cc.cd';
+const siteBase = '';
 const feeds = [
   { lang: 'zh', language: 'zh-CN' },
   { lang: 'en', language: 'en-US' },

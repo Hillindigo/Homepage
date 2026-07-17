@@ -2,8 +2,8 @@ import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const root=path.resolve('dist');
-const siteOrigin='https://hillindigo.github.io';
-const siteBase='/Homepage';
+const siteOrigin='https://hillindigo.cc.cd';
+const siteBase='';
 const expectedIndex=`${siteOrigin}${siteBase}/sitemap-index.xml`;
 const problems=[];
 const htmlFiles=[];

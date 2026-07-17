@@ -10,7 +10,7 @@ year: 2026
 status: active
 stack: [Astro, TypeScript, Pagefind, GitHub Pages]
 repository: https://github.com/Hillindigo/Homepage
-website: https://hillindigo.github.io/Homepage/
+website: https://hillindigo.cc.cd/
 ---
 
 Hillindigo 是我为自己建立的长期数字花园。它不是一个只展示个人简介的名片，而是一套可以持续写作、检索、归档和迭代的内容系统。

@@ -75,7 +75,7 @@ const structuredData={
       <ShareActions lang={lang} title={title} sourceUrl={sourceUrl} citation={citation}/>
       {(navigation.previous||navigation.next)&&<nav class="article-navigation" data-pagefind-ignore aria-label={lang==='zh'?'文章导航':'Article navigation'}>{navigation.previous?<a href={navigation.previous.href}><span>{lang==='zh'?'上一篇':'Previous'}</span><strong>{navigation.previous.title}</strong></a>:<i></i>}{navigation.next&&<a class="next" href={navigation.next.href}><span>{lang==='zh'?'下一篇':'Next'}</span><strong>{navigation.next.title}</strong></a>}</nav>}
       <RelatedContent lang={lang} items={related}/>
-      {comments&&<Comments lang={lang}/>} 
+      {comments&&<Comments lang={lang} title={title} pageUrl={canonicalUrl}/>} 
     </article>
   </main>
   <CodeCopy/>

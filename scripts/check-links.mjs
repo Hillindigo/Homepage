@@ -3,7 +3,7 @@ import { constants } from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve('dist');
-const base = '/Homepage';
+const base = '';
 const htmlFiles = [];
 const walk = async (directory) => {
   for (const entry of await readdir(directory, { withFileTypes: true })) {

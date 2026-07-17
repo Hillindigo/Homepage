@@ -1,0 +1,147 @@
+- generic [active] [ref=e1]:
+  - link "跳到主要内容" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - navigation [ref=e4]:
+      - link "Hillindigo avatar 青山黛 · Hillindigo" [ref=e5] [cursor=pointer]:
+        - /url: /Homepage/zh/
+        - img "Hillindigo avatar" [ref=e6]
+        - generic [ref=e7]: 青山黛 · Hillindigo
+      - generic [ref=e8]:
+        - link "文章" [ref=e9] [cursor=pointer]:
+          - /url: /Homepage/zh/writing/
+        - link "笔记" [ref=e10] [cursor=pointer]:
+          - /url: /Homepage/zh/notes/
+        - link "项目" [ref=e11] [cursor=pointer]:
+          - /url: /Homepage/zh/projects/
+        - link "生活" [ref=e12] [cursor=pointer]:
+          - /url: /Homepage/zh/life/
+        - link "关于" [ref=e13] [cursor=pointer]:
+          - /url: /Homepage/zh/about/
+      - generic [ref=e14]:
+        - link "搜索" [ref=e15] [cursor=pointer]:
+          - /url: /Homepage/zh/search/
+          - text: ⌕
+        - link "EN · 切换到英文" [ref=e16] [cursor=pointer]:
+          - /url: /Homepage/en/writing/agent-engineering-baseline/
+          - text: EN
+        - button "主题：跟随系统。切换为浅色" [ref=e17] [cursor=pointer]: ◐
+  - main [ref=e19]:
+    - article [ref=e20]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: HILLINDIGO / WRITING
+        - heading "AI Agent 应用的第一条工程原则" [level=1] [ref=e23]
+        - paragraph [ref=e24]: 在追求自主性之前，先让系统的边界、状态与失败变得可观察。
+        - generic [ref=e25]:
+          - time [ref=e26]: 2026年7月15日
+          - generic [ref=e27]: 2 分钟阅读
+        - generic [ref=e28]:
+          - link "AI Agent" [ref=e29] [cursor=pointer]:
+            - /url: /Homepage/zh/tags/AI%20Agent/
+          - link "软件工程" [ref=e30] [cursor=pointer]:
+            - /url: /Homepage/zh/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/
+      - generic [ref=e31]:
+        - complementary [ref=e32]:
+          - paragraph [ref=e33]: 目录
+          - navigation [ref=e34]:
+            - link "从可观察性开始" [ref=e35] [cursor=pointer]:
+              - /url: "#从可观察性开始"
+            - link "明确失败语义" [ref=e36] [cursor=pointer]:
+              - /url: "#明确失败语义"
+            - link "自主性应当逐级开放" [ref=e37] [cursor=pointer]:
+              - /url: "#自主性应当逐级开放"
+        - generic [ref=e38]:
+          - paragraph [ref=e39]: 一个 Agent 能够调用更多工具、执行更长任务，并不等于它更可靠。真正进入工程环境后，首先需要解决的不是“还能让它做什么”，而是“当它没有按预期工作时，我们能否准确知道发生了什么”。
+          - heading [level=2] [ref=e40]:
+            - text: 从可观察性开始
+            - link "复制本节链接：从可观察性开始" [ref=e41] [cursor=pointer]:
+              - /url: "#%E4%BB%8E%E5%8F%AF%E8%A7%82%E5%AF%9F%E6%80%A7%E5%BC%80%E5%A7%8B"
+              - text: "#"
+          - paragraph [ref=e42]: 至少记录四类信息：用户目标、模型决策、工具输入输出，以及最终状态。它们组成一次任务的完整轨迹。没有这条轨迹，调试只能依赖猜测。
+          - generic [ref=e43]:
+            - code [ref=e44]:
+              - generic [ref=e45]: "type AgentTrace = {"
+              - generic [ref=e46]: "goal: string;"
+              - generic [ref=e47]: "steps: Array<{ tool: string; input: unknown; output: unknown }>;"
+              - generic [ref=e48]: "status: 'completed' | 'failed' | 'needs_input';"
+              - generic [ref=e49]: "};"
+            - button "复制代码" [ref=e50] [cursor=pointer]
+          - heading [level=2] [ref=e51]:
+            - text: 明确失败语义
+            - link "复制本节链接：明确失败语义" [ref=e52] [cursor=pointer]:
+              - /url: "#%E6%98%8E%E7%A1%AE%E5%A4%B1%E8%B4%A5%E8%AF%AD%E4%B9%89"
+              - text: "#"
+          - paragraph [ref=e53]: “没有完成”可能意味着工具超时、权限不足、输入缺失，也可能只是模型选择了错误路径。系统应当把这些状态区分开，而不是统一返回一个模糊的错误。
+          - heading [level=2] [ref=e54]:
+            - text: 自主性应当逐级开放
+            - link "复制本节链接：自主性应当逐级开放" [ref=e55] [cursor=pointer]:
+              - /url: "#%E8%87%AA%E4%B8%BB%E6%80%A7%E5%BA%94%E5%BD%93%E9%80%90%E7%BA%A7%E5%BC%80%E6%94%BE"
+              - text: "#"
+          - paragraph [ref=e56]: 先让 Agent 在可回放、可中断、可确认的流程中工作，再逐步增加自主决策范围。每增加一层能力，都应同时增加对应的观测与约束。
+          - paragraph [ref=e57]: 工程化的目标不是消除不确定性，而是让不确定性可以被发现、理解和处理。
+      - region "分享文章" [ref=e58]:
+        - generic [ref=e59]: 分享这篇内容
+        - generic [ref=e60]:
+          - button "分享 ↗" [ref=e61] [cursor=pointer]
+          - button "复制链接" [ref=e62] [cursor=pointer]
+          - button "复制引用" [ref=e63] [cursor=pointer]
+          - button "打印" [ref=e64] [cursor=pointer]
+          - link "查看源码 ↗" [ref=e65] [cursor=pointer]:
+            - /url: https://github.com/Hillindigo/Homepage/blob/main/src/content/blog/zh/agent-engineering-baseline.md
+        - paragraph [ref=e66]
+      - navigation "文章导航" [ref=e67]:
+        - link "上一篇 青山黛，从这里开始" [ref=e68] [cursor=pointer]:
+          - /url: /Homepage/zh/writing/hello-hillindigo/
+          - generic [ref=e69]: 上一篇
+          - strong [ref=e70]: 青山黛，从这里开始
+      - complementary [ref=e71]:
+        - paragraph [ref=e72]: 继续探索
+        - heading "你可能还会喜欢" [level=2] [ref=e73]
+        - generic [ref=e74]:
+          - link "01 / 文章 青山黛，从这里开始 关于这座个人数字花园的第一篇记录。 ↗" [ref=e75] [cursor=pointer]:
+            - /url: /Homepage/zh/writing/hello-hillindigo/
+            - generic [ref=e76]: 01 / 文章
+            - strong [ref=e77]: 青山黛，从这里开始
+            - paragraph [ref=e78]: 关于这座个人数字花园的第一篇记录。
+            - generic [ref=e79]: ↗
+          - link "02 / 生活 慢下来，也是一种前进 关于散步、留白，以及从屏幕之外重新获得注意力。 ↗" [ref=e80] [cursor=pointer]:
+            - /url: /Homepage/zh/life/慢下来也是一种前进/
+            - generic [ref=e81]: 02 / 生活
+            - strong [ref=e82]: 慢下来，也是一种前进
+            - paragraph [ref=e83]: 关于散步、留白，以及从屏幕之外重新获得注意力。
+            - generic [ref=e84]: ↗
+          - link "03 / 笔记 第一条笔记 网站内容系统建立完成。 ↗" [ref=e85] [cursor=pointer]:
+            - /url: /Homepage/zh/notes/first-note/
+            - generic [ref=e86]: 03 / 笔记
+            - strong [ref=e87]: 第一条笔记
+            - paragraph [ref=e88]: 网站内容系统建立完成。
+            - generic [ref=e89]: ↗
+      - region [ref=e90]:
+        - paragraph [ref=e91]: 讨论
+        - heading "评论与补充" [level=2] [ref=e92]
+        - generic [ref=e93]:
+          - paragraph [ref=e94]: 内嵌评论尚未启用，但 GitHub Discussions 已开放，可以直接前往留言。
+          - generic [ref=e95]:
+            - link "针对本文发起讨论 ↗" [ref=e96] [cursor=pointer]:
+              - /url: https://github.com/Hillindigo/Homepage/discussions/new?category=general&title=%E5%85%B3%E4%BA%8E%E3%80%8AAI+Agent+%E5%BA%94%E7%94%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E6%9D%A1%E5%B7%A5%E7%A8%8B%E5%8E%9F%E5%88%99%E3%80%8B%E7%9A%84%E8%AE%A8%E8%AE%BA&body=%E6%9D%A5%E6%BA%90%E6%96%87%E7%AB%A0%EF%BC%9Ahttps%3A%2F%2Fhillindigo.github.io%2FHomepage%2Fzh%2Fwriting%2Fagent-engineering-baseline%2F%0A%0A%E6%88%91%E6%83%B3%E8%A1%A5%E5%85%85%E7%9A%84%E6%98%AF%EF%BC%9A
+            - link "浏览全部 ↗" [ref=e97] [cursor=pointer]:
+              - /url: https://github.com/Hillindigo/Homepage/discussions
+  - contentinfo [ref=e98]:
+    - generic [ref=e99]:
+      - generic [ref=e100]:
+        - strong [ref=e101]: 青山黛 · HILLINDIGO
+        - generic [ref=e102]: 记录技术、系统与有温度的生活。
+      - navigation "页脚导航" [ref=e103]:
+        - link "文章" [ref=e104] [cursor=pointer]:
+          - /url: /Homepage/zh/writing/
+        - link "搜索" [ref=e105] [cursor=pointer]:
+          - /url: /Homepage/zh/search/
+        - link "归档" [ref=e106] [cursor=pointer]:
+          - /url: /Homepage/zh/archive/
+        - link "标签" [ref=e107] [cursor=pointer]:
+          - /url: /Homepage/zh/tags/
+        - link "RSS" [ref=e108] [cursor=pointer]:
+          - /url: /Homepage/zh/rss.xml
+        - link "GitHub ↗" [ref=e109] [cursor=pointer]:
+          - /url: https://github.com/Hillindigo/Homepage
+      - generic [ref=e110]: © 2026 · BUILT WITH ASTRO

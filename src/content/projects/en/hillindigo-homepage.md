@@ -10,7 +10,7 @@ year: 2026
 status: active
 stack: [Astro, TypeScript, Pagefind, GitHub Pages]
 repository: https://github.com/Hillindigo/Homepage
-website: https://hillindigo.github.io/Homepage/
+website: https://hillindigo.cc.cd/
 ---
 
 Hillindigo is a long-term digital garden rather than a profile card. It is designed as a system for writing, searching, archiving and revisiting ideas over time.
